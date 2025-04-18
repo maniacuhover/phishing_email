@@ -4,6 +4,7 @@ import json
 import os
 import requests
 from datetime import datetime
+import time
 
 # Configurare pagină
 st.set_page_config(
@@ -64,10 +65,37 @@ def generate_emails_with_ai(phishing_type):
     """
     Generează emailuri folosind API-ul Hugging Face
     """
-    # Verificăm dacă există o cheie API configurată
-    api_key = os.environ.get("HF_API_KEY", st.secrets.get("HF_API_KEY", None))
+    # Verificăm și debugăm cheia API
+    api_key = None
     
-    if not api_key:
+    # Încearcă să accesezi cheia din variabile de mediu
+    env_api_key = os.environ.get("HF_API_KEY")
+    if env_api_key:
+        api_key = env_api_key
+        st.sidebar.success("API key găsit în variabile de mediu!")
+    
+    # Încearcă să accesezi cheia din secrets
+    try:
+        if hasattr(st, 'secrets') and 'HF_API_KEY' in st.secrets:
+            secrets_api_key = st.secrets['HF_API_KEY']
+            api_key = secrets_api_key
+            st.sidebar.success("API key găsit în secrets!")
+        else:
+            # Încearcă acces alternativ la secrets
+            if hasattr(st, 'secrets'):
+                st.sidebar.info(f"Cheile disponibile în secrets: {list(st.secrets.keys())}")
+            else:
+                st.sidebar.warning("Obiectul st.secrets nu există")
+    except Exception as e:
+        st.sidebar.error(f"Eroare la accesarea secrets: {str(e)}")
+    
+    # Afișează informații despre cheie pentru debugging
+    if api_key:
+        # Afișează primele și ultimele 4 caractere pentru securitate
+        masked_key = f"{api_key[:4]}...{api_key[-4:]}" if len(api_key) > 8 else "***"
+        st.sidebar.info(f"API key găsit: {masked_key} (lungime: {len(api_key)})")
+    else:
+        st.sidebar.warning("Nu s-a găsit niciun API key. Se va folosi generarea demo.")
         # Simulăm generarea dacă nu avem API key (pentru demo)
         return {
             "real": {
@@ -82,6 +110,9 @@ def generate_emails_with_ai(phishing_type):
     
     # Dacă avem cheie API, facem cererea către serviciul AI
     try:
+        # Folosim un model mai accesibil
+        MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+        
         # Prompt pentru email legitim
         prompt_real = f"""
         Generează un email PROFESIONAL și LEGITIM românesc pe tema "{phishing_type}".
@@ -96,57 +127,112 @@ def generate_emails_with_ai(phishing_type):
         urgență, link-uri suspecte, cerere de date personale, etc. Include subiect și corp.
         """
         
-        # Facem request-urile către API
+        # Facem request-urile către API cu mai multe informații de debug
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         }
         
-        # Request pentru email legitim
-        response_real = requests.post(
-            "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
-            headers=headers,
-            json={"inputs": prompt_real, "parameters": {"max_length": 300}}
-        )
-        
-        # Request pentru email phishing
-        response_fake = requests.post(
-            "https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf",
-            headers=headers,
-            json={"inputs": prompt_fake, "parameters": {"max_length": 300}}
-        )
-        
-        # Procesăm răspunsurile
-        if response_real.status_code == 200 and response_fake.status_code == 200:
-            real_text = response_real.json()[0]["generated_text"]
-            fake_text = response_fake.json()[0]["generated_text"]
-            
-            # Extragem subiect și corp
-            real_lines = real_text.split("\n")
-            fake_lines = fake_text.split("\n")
-            
-            real_subject = next((line for line in real_lines if "subiect" in line.lower()), "Email legitim")
-            fake_subject = next((line for line in fake_lines if "subiect" in line.lower()), "URGENȚĂ: Acțiune necesară")
-            
-            real_body = "\n".join(line for line in real_lines if "subiect" not in line.lower())
-            fake_body = "\n".join(line for line in fake_lines if "subiect" not in line.lower())
-            
-            return {
-                "real": {
-                    "subject": real_subject.replace("Subiect:", "").strip(),
-                    "body": real_body.strip()
-                },
-                "fake": {
-                    "subject": fake_subject.replace("Subiect:", "").strip(),
-                    "body": fake_body.strip()
-                }
+        # Request pentru email legitim cu parametri ajustați
+        real_payload = {
+            "inputs": prompt_real,
+            "parameters": {
+                "max_new_tokens": 300,
+                "temperature": 0.7,
+                "top_p": 0.9
             }
+        }
+        
+        # Implementăm logica cu retry
+        def make_api_request(payload, max_retries=3):
+            for attempt in range(max_retries):
+                try:
+                    response = requests.post(MODEL_URL, headers=headers, json=payload)
+                    if response.status_code == 200:
+                        return response
+                    elif response.status_code == 429:  # Too Many Requests
+                        wait_time = (attempt + 1) * 2  # Așteptare exponențială
+                        st.warning(f"Limită de rată depășită. Așteptăm {wait_time} secunde...")
+                        time.sleep(wait_time)
+                    else:
+                        st.error(f"Eroare API: {response.status_code}, {response.text}")
+                        return response
+                except Exception as e:
+                    st.error(f"Excepție la solicitarea API: {str(e)}")
+                    time.sleep(1)
+            return None
+        
+        # Facem requesturile cu retry
+        response_real = make_api_request(real_payload)
+        fake_payload = {
+            "inputs": prompt_fake,
+            "parameters": {
+                "max_new_tokens": 300,
+                "temperature": 0.7,
+                "top_p": 0.9
+            }
+        }
+        response_fake = make_api_request(fake_payload)
+        
+        # Procesăm răspunsurile cu verificare mai atentă
+        if response_real and response_fake and response_real.status_code == 200 and response_fake.status_code == 200:
+            try:
+                real_json = response_real.json()
+                fake_json = response_fake.json()
+                
+                # Afișăm informații despre structura răspunsului pentru debug
+                st.sidebar.info(f"Structura răspuns real: {type(real_json)}")
+                st.sidebar.info(f"Structura răspuns fake: {type(fake_json)}")
+                
+                # Adaptăm extragerea în funcție de structura răspunsului
+                if isinstance(real_json, list) and len(real_json) > 0:
+                    real_text = real_json[0].get("generated_text", "")
+                elif isinstance(real_json, dict):
+                    real_text = real_json.get("generated_text", "")
+                else:
+                    real_text = str(real_json)  # Fallback
+                
+                if isinstance(fake_json, list) and len(fake_json) > 0:
+                    fake_text = fake_json[0].get("generated_text", "")
+                elif isinstance(fake_json, dict):
+                    fake_text = fake_json.get("generated_text", "")
+                else:
+                    fake_text = str(fake_json)  # Fallback
+                
+                # Extragem subiect și corp
+                real_lines = real_text.split("\n")
+                fake_lines = fake_text.split("\n")
+                
+                real_subject = next((line for line in real_lines if "subiect" in line.lower()), "Email legitim")
+                fake_subject = next((line for line in fake_lines if "subiect" in line.lower()), "URGENȚĂ: Acțiune necesară")
+                
+                real_body = "\n".join(line for line in real_lines if "subiect" not in line.lower())
+                fake_body = "\n".join(line for line in fake_lines if "subiect" not in line.lower())
+                
+                return {
+                    "real": {
+                        "subject": real_subject.replace("Subiect:", "").strip(),
+                        "body": real_body.strip()
+                    },
+                    "fake": {
+                        "subject": fake_subject.replace("Subiect:", "").strip(),
+                        "body": fake_body.strip()
+                    }
+                }
+            except Exception as e:
+                st.error(f"Eroare la procesarea răspunsului: {str(e)}")
+                raise e
         else:
+            # Afișăm informații detaliate despre erori
+            if response_real:
+                st.error(f"Eroare la requestul pentru email legitim: Status code {response_real.status_code}, Răspuns: {response_real.text}")
+            if response_fake:
+                st.error(f"Eroare la requestul pentru email phishing: Status code {response_fake.status_code}, Răspuns: {response_fake.text}")
             # Fallback la exemple statice
-            raise Exception("API error")
+            raise Exception("API error - vezi detaliile de mai sus")
             
     except Exception as e:
-        st.error(f"Eroare la generarea cu AI: {str(e)}")
+        st.error(f"Eroare detaliată la generarea cu AI: {str(e)}")
         # Răspuns de fallback
         return {
             "real": {
