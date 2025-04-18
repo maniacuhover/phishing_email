@@ -1,0 +1,194 @@
+[
+  {
+    "type": "Email-phishing clasic",
+    "real": {
+      "subject": "Factura lunii martie de la FurnizorulTau",
+      "body": "Stimate client,\n\nVă transmitem atașat factura pentru luna martie. Aceasta poate fi vizualizată accesând secțiunea 'Facturi' din contul dvs. pe site-ul nostru www.furnizorultau.ro.\n\nCu stimă,\nEchipa FurnizorulTau."
+    },
+    "fake": {
+      "subject": "ACTIVITATE SUSPECTĂ pe contul tău – Verifică ACUM",
+      "body": "Contul tău a fost compromis. Click aici http://bit.ly/secure-check pentru resetare imediată sau riscați blocarea contului în următoarele 24 de ore!\n\nDepartamentul de Securitate"
+    },
+    "explanation": "Fals: ton de urgență, link scurt suspect, lipsă de detalii profesionale. Real: limbaj formal, referire la site-ul oficial, nu solicită acțiune imediată."
+  },
+  {
+    "type": "Spear-phishing",
+    "real": {
+      "subject": "Întâlnirea de proiect - agenda",
+      "body": "Bună ziua,\n\nVă trimit agenda pentru întâlnirea noastră de săptămâna viitoare referitoare la proiectul X.\n\nVă rog să confirmați participarea până vineri.\n\nCu stimă,\nMaria Popescu\nManager de Proiect\nTel: 0721.123.456"
+    },
+    "fake": {
+      "subject": "Referitor la proiectul nostru",
+      "body": "Salut,\n\nAm observat că nu ai trimis încă documentele pentru proiectul X pe care le așteptăm urgent.\n\nDescarcă formularul de aici: http://docs-google.net/form și trimite-l în maxim 2 ore.\n\nMulțumesc,\nAndrei"
+    },
+    "explanation": "Fals: folosește presiune, adresă URL suspectă (docs-google.net), lipsă detalii de contact profesionale. Real: conține informații specifice, semnătură completă cu date de contact."
+  },
+  {
+    "type": "Fraudă bancară",
+    "real": {
+      "subject": "Informare: Noi funcționalități în aplicația BancaX",
+      "body": "Stimată Doamnă/Stimate Domn,\n\nVă informăm că am actualizat aplicația mobilă cu noi funcționalități de securitate.\n\nPentru detalii, accesați aplicația sau www.banca-x.ro/noutati.\n\nNu este necesară nicio acțiune din partea dumneavoastră.\n\nCu stimă,\nEchipa BancaX"
+    },
+    "fake": {
+      "subject": "URGENT: Cardul dvs. va fi blocat",
+      "body": "Stimat client,\n\nCardul dvs. va fi blocat în 24h din cauza unei activități suspecte detectate recent.\n\nPentru verificare și deblocare, accesați: http://banca-x.secureverify.com și introduceți datele cardului și codul PIN.\n\nDepartament Securitate"
+    },
+    "explanation": "Fals: domeniu fals (banca-x.secureverify.com), solicită date sensibile (PIN), ton de urgență. Real: nu solicită date, trimite către site-ul oficial, formulare de adresare formale."
+  },
+  {
+    "type": "Ofertă falsă",
+    "real": {
+      "subject": "Promoție de vară la produsele electronice",
+      "body": "Dragi clienți,\n\nVă anunțăm că începând cu data de 15 iunie, toate produsele electronice vor beneficia de reduceri de până la 30%.\n\nPentru mai multe detalii și catalog complet, vizitați magazinul nostru sau www.electroshop.ro.\n\nEchipa ElectroShop"
+    },
+    "fake": {
+      "subject": "FELICITĂRI! Ai câștigat un iPhone 15!",
+      "body": "Felicitări!\n\nAi fost selectat aleatoriu pentru a primi un iPhone 15 GRATUIT!\n\nPentru a revendica premiul, accesează link-ul: www.winner-claim.xyz/iphone și completează formularul cu datele tale personale și adresa de livrare în 48 de ore.\n\nEchipa Winner"
+    },
+    "explanation": "Fals: ofertă prea bună pentru a fi adevărată, domeniu suspect (.xyz), solicită date personale. Real: promoție rezonabilă, site oficial, nu solicită date personale."
+  },
+  {
+    "type": "Impersonare CEO",
+    "real": {
+      "subject": "Prezentarea trimestrială - feedback",
+      "body": "Bună ziua tuturor,\n\nVă mulțumesc pentru participarea la prezentarea trimestrială de ieri.\n\nVă rog să trimiteți feedback-ul și sugestiile în formularul din intranet până vineri.\n\nCu stimă,\nAna Marinescu\nDirector General\nam@compania.ro"
+    },
+    "fake": {
+      "subject": "Solicitare urgentă - confidențial",
+      "body": "Salut,\n\nSunt în mijlocul unei întâlniri importante și am nevoie urgent să achiziționez niște carduri cadou pentru un client VIP.\n\nPoți să cumperi 5 carduri Amazon a câte 200 EUR și să-mi trimiți codurile pe acest email?\n\nVoi aproba rambursarea imediat ce mă întorc.\n\nMulțumesc,\nAna Marinescu\nDirector General\nanam_ceo@gmail.com"
+    },
+    "explanation": "Fals: ton urgent, adresă de email suspectă (gmail personal în loc de domeniul companiei), solicitare neobișnuită de bani/carduri. Real: adresă oficială de email, solicitare profesională normală."
+  },
+  {
+    "type": "Actualizare de securitate",
+    "real": {
+      "subject": "Actualizare politică de securitate - acțiune necesară",
+      "body": "Stimate utilizator,\n\nAm actualizat politica noastră de securitate.\n\nVă rugăm să vă autentificați în contul dvs. de pe site-ul nostru www.serviciu-web.ro și să revizuiți noile termeni din secțiunea 'Setări cont'.\n\nEchipa de Securitate\nServiceWeb"
+    },
+    "fake": {
+      "subject": "URGENT: Actualizare de securitate necesară ACUM",
+      "body": "Atenție!\n\nContul dvs. este expus riscurilor! Trebuie să actualizați imediat parola accesând acest link: http://service-web.security-login.com\n\nIntroduceți parola actuală și setați una nouă în maxim 2 ore sau contul va fi suspendat.\n\nDepartamentul Tehnic"
+    },
+    "explanation": "Fals: ton alarmist, domeniu fals (service-web.security-login.com), cere direct parola. Real: trimite către site-ul oficial, nu solicită informații sensibile prin email."
+  },
+  {
+    "type": "Suport tehnic fals",
+    "real": {
+      "subject": "Confirmare ticket suport #12345",
+      "body": "Bună ziua,\n\nAm înregistrat solicitarea dvs. cu numărul de ticket #12345.\n\nUn specialist va analiza problema și vă va contacta în maxim 24 de ore.\n\nPuteți urmări statusul ticket-ului pe portalul nostru de suport.\n\nEchipa de Suport Tehnic\nsupport@companie.ro"
+    },
+    "fake": {
+      "subject": "Alerta Virus Detectat pe Dispozitiv",
+      "body": "AVERTISMENT: Am detectat un virus periculos pe dispozitivul dvs!\n\nDatele dvs. sunt în pericol! Sunați ACUM la +40 722 123 456 pentru asistență imediată de la echipa noastră Microsoft.\n\nSau accesați: http://windows-security-center.tech pentru scanare gratuită.\n\nEchipa de Securitate Microsoft"
+    },
+    "explanation": "Fals: pretinde că este de la Microsoft, număr de telefon suspect, domeniu neoficial, ton alarmist. Real: referire la un ticket specific, nu solicită acțiune urgentă, adresă email oficială."
+  },
+  {
+    "type": "Notificare livrare",
+    "real": {
+      "subject": "Comandă #A12345 - În curs de livrare",
+      "body": "Bună ziua,\n\nComanda dvs. #A12345 a fost expediată și va fi livrată în data de 25.06.2023.\n\nPuteți urmări statusul folosind codul de tracking: RO123456789RO pe site-ul nostru www.curier-oficial.ro.\n\nEchipa Livrări\nCurier Oficial"
+    },
+    "fake": {
+      "subject": "Colet reținut la vamă - Acțiune necesară",
+      "body": "Atenție!\n\nColetul dvs. a fost reținut la vamă datorită unei taxe neplătite de 19,99 EUR.\n\nPentru a evita returnarea, accesați urgent: http://customs-delivery-pay.com și introduceți datele cardului pentru plata taxei.\n\nServiciul Vamal de Curierat"
+    },
+    "explanation": "Fals: solicită plată online pe un site suspect, nu menționează numărul specific al comenzii, domeniu suspect. Real: include număr de comandă și cod de tracking, trimite către site oficial."
+  },
+  {
+    "type": "Reînnoire abonament",
+    "real": {
+      "subject": "Abonamentul dvs. expiră în 7 zile",
+      "body": "Stimate abonat,\n\nVă reamintim că abonamentul dvs. premium va expira pe data de 30.06.2023.\n\nPentru reînnoire, accesați contul dvs. pe www.serviciu-streaming.ro/cont și selectați opțiunea dorită.\n\nVă mulțumim că sunteți alături de noi!\n\nEchipa Serviciu Streaming"
+    },
+    "fake": {
+      "subject": "ULTIMA ȘANSĂ: Abonamentul dvs. Netflix expiră AZI",
+      "body": "Atenție: Abonamentul dvs. Netflix expiră astăzi!\n\nPentru a evita întreruperea serviciului, actualizați urgent detaliile de plată aici: http://netflix-renew.payment.com\n\nIntroduceți datele cardului pentru reînnoirea automată.\n\nEchipa Netflix"
+    },
+    "explanation": "Fals: presiune extremă de timp, domeniu fals (netflix-renew.payment.com), solicită direct date de card. Real: oferă notificare din timp, trimite către site-ul oficial, nu solicită date sensibile prin email."
+  },
+  {
+    "type": "Donație falsă",
+    "real": {
+      "subject": "Mulțumim pentru interesul față de cauza noastră",
+      "body": "Dragă susținător,\n\nÎți mulțumim pentru interesul arătat față de proiectele noastre.\n\nDacă dorești să contribui, poți face o donație prin site-ul nostru oficial www.ong-salvare.ro/doneaza, unde vei găsi toate metodele de plată disponibile și detalii despre cum vor fi folosite fondurile.\n\nCu recunoștință,\nEchipa ONG Salvare"
+    },
+    "fake": {
+      "subject": "URGENT: Apel pentru ajutor - Victimele dezastrului",
+      "body": "Dragă om cu suflet mare,\n\nMii de victime ale dezastrului recent au nevoie URGENTĂ de ajutorul tău!\n\nDonează ACUM prin transfer direct în contul: RO11FAKE12345678900 sau folosește link-ul rapid de donație: http://help-disaster-victims.org/donate\n\nFiecare minut contează!\n\nFundația Internațională de Ajutor"
+    },
+    "explanation": "Fals: ton extrem de urgent, organizație nefamiliară, cont bancar sau link de donație direct în email. Real: direcționează către site-ul oficial, ton profesional, fără presiune."
+  },
+  {
+    "type": "Oportunitate de investiții",
+    "real": {
+      "subject": "Invitație: Webinar despre strategii de investiții 2023",
+      "body": "Stimată Doamnă/Stimate Domn,\n\nVă invităm să participați la webinarul nostru despre strategii de investiții pentru 2023, care va avea loc pe data de 15 iulie.\n\nPentru a vă înscrie și a afla mai multe detalii, vizitați: www.banca-investitii.ro/webinare\n\nParticiparea este gratuită pentru clienții noștri.\n\nBanca de Investiții"
+    },
+    "fake": {
+      "subject": "CONFIDENȚIAL: Oportunitate de investiții cu randament GARANTAT 50%",
+      "body": "Oportunitate EXCLUSIVĂ de investiții!\n\nUn grup select de investitori poate acum accesa o oportunitate UNICĂ cu randament GARANTAT de 50% în doar 3 luni!\n\nLocuri limitate! Transferă minim 1000 EUR în contul: RO99FAKE87654321000 pentru a-ți rezerva poziția.\n\nRăspunde în 24h pentru detalii confidențiale!\n\nGrupul de Investiții Exclusive"
+    },
+    "explanation": "Fals: promisiune de câștig nerealist de mare, presiune de timp, solicită transfer direct de bani. Real: invitație la un eveniment informativ gratuit, fără solicitare de bani, site oficial."
+  },
+  {
+    "type": "Cupoane și discount-uri",
+    "real": {
+      "subject": "Voucher cadou pentru aniversarea colaborării noastre",
+      "body": "Dragă client,\n\nCu ocazia aniversării a 3 ani de când ești clientul nostru, îți oferim un voucher în valoare de 50 RON.\n\nPoți folosi codul ANIV50 la următoarea comandă pe site-ul nostru www.magazin-oficial.ro până la data de 31.12.2023.\n\nEchipa Magazin Oficial"
+    },
+    "fake": {
+      "subject": "CÂȘTIGĂTOR! Voucher de 500 EUR la Carrefour",
+      "body": "FELICITĂRI! Ai fost selectat pentru a primi un voucher GRATUIT de 500 EUR la Carrefour!\n\nPentru a revendica premiul, completează formularul de la: http://carrefour-vouchers.win cu datele tale personale și numărul cardului pentru verificare.\n\nOfertă validă doar 24 ore!\n\nEchipa Promoții Carrefour"
+    },
+    "explanation": "Fals: valoare nerealist de mare, domeniu suspect (.win), solicită date de card, presiune de timp extremă. Real: ofertă realistă, cod de voucher direct în email, site oficial, perioadă rezonabilă de valabilitate."
+  },
+  {
+    "type": "Confirmare comandă falsă",
+    "real": {
+      "subject": "Confirmare comandă #B78901 - Magazin Online",
+      "body": "Mulțumim pentru comanda dvs.!\n\nComanda #B78901 a fost înregistrată cu succes.\nProduse comandate: Telefon Samsung Galaxy S23\nValoare totală: 3.299 RON\nData livrării estimate: 27.06.2023\n\nPentru detalii complete, accesați contul dvs. pe www.magazin-online.ro\n\nEchipa Magazin Online"
+    },
+    "fake": {
+      "subject": "Comandă confirmată #XZ12345 - Plată eșuată",
+      "body": "Comandă confirmată #XZ12345\n\nATENȚIE: Plata pentru comanda dvs. de iPhone 14 Pro (2.499 EUR) a eșuat.\n\nPentru a evita anularea, actualizați urgent detaliile de plată aici: http://order-payment-update.shop\n\nComanda va fi anulată automat în 2 ore dacă plata nu este procesată.\n\nDepartamentul Financiar"
+    },
+    "explanation": "Fals: comandă pe care nu ai făcut-o, presiune de timp, link suspect, solicită date de plată. Real: detalii specifice despre o comandă reală, trimitere către site-ul oficial, nu solicită acțiune urgentă."
+  },
+  {
+    "type": "Probleme cont social media",
+    "real": {
+      "subject": "Actualizare termeni și condiții Facebook",
+      "body": "Bună ziua,\n\nVă informăm că am actualizat termenii și condițiile de utilizare.\n\nPuteți consulta noii termeni accesând secțiunea 'Setări cont' > 'Termeni și condiții' din contul dvs. sau vizitând www.facebook.com/terms.\n\nNu este necesară nicio acțiune pentru continuarea utilizării serviciilor noastre.\n\nEchipa Facebook"
+    },
+    "fake": {
+      "subject": "ALERTĂ: Contul dvs. Facebook va fi dezactivat",
+      "body": "URGENT: Contul dvs. a fost raportat pentru încălcarea regulilor comunității!\n\nContul dvs. va fi dezactivat în 24 de ore dacă nu confirmați identitatea.\n\nPentru verificare rapidă, accesați: http://facebook-verify-account.co și introduceți datele de autentificare.\n\nDepartamentul de Securitate Facebook"
+    },
+    "explanation": "Fals: domeniu fals (facebook-verify-account.co), ton alarmist, solicită date de autentificare. Real: trimite către site-ul oficial, nu solicită acțiuni urgente, ton profesional."
+  },
+  {
+    "type": "Verificare cont",
+    "real": {
+      "subject": "Confirmare adresă de email pentru contul nou",
+      "body": "Bună ziua,\n\nPentru a finaliza înregistrarea contului dvs. pe platforma noastră, vă rugăm să confirmați adresa de email accesând link-ul de mai jos:\n\nhttps://www.platforma-servicii.ro/confirmare?token=abc123\n\nLink-ul este valabil 48 de ore.\n\nDacă nu ați solicitat crearea unui cont, ignorați acest email.\n\nEchipa Platformă Servicii"
+    },
+    "fake": {
+      "subject": "ULTIMĂ NOTIFICARE: Contul dvs. va fi suspendat",
+      "body": "Contul dvs. este programat pentru suspendare din cauza unor activități suspecte!\n\nTrebuie să vă verificați IMEDIAT contul accesând: http://account-verification-secure.info și să introduceți numele de utilizator, parola și numărul de telefon pentru verificare.\n\nNeconfirmarea în 6 ore va duce la suspendarea definitivă!\n\nEchipa de Securitate"
+    },
+    "explanation": "Fals: domeniu suspect, solicită multiple date sensibile, presiune extremă de timp, nu menționează numele serviciului. Real: domeniu oficial, link cu token securizat, perioadă rezonabilă, instrucțiuni în caz de eroare."
+  },
+  {
+    "type": "Refund fals",
+    "real": {
+      "subject": "Confirmare rambursare comandă #C45678",
+      "body": "Stimate client,\n\nVă informăm că am procesat cererea dvs. de rambursare pentru comanda #C45678.\n\nSuma de 249,99 RON a fost returnată pe cardul folosit la achiziție și va fi vizibilă în contul dvs. în 3-5 zile lucrătoare.\n\nPentru detalii, accesați istoricul comenzilor din contul dvs. pe www.magazin-electronic.ro.\n\nMagazin Electronic"
+    },
+    "fake": {
+      "subject": "REFUND DISPONIBIL - 329,99 EUR Rambursare fiscală",
+      "body": "Stimate contribuabil,\n\nAvem plăcerea să vă informăm că aveți o RAMBURSARE FISCALĂ în valoare de 329,99 EUR disponibilă!\n\nPentru a primi suma, accesați: http://tax-refund-gov.eu și completați formularul cu datele dvs. bancare pentru transfer direct.\n\nRambursarea expiră în 48 ore!\n\nAdministrația Fiscală"
+    },
+    "explanation": "Fals: domeniu fals care imită o instituție guvernamentală, sumă mare nejustificată, presiune de timp, solicită date bancare. Real: referință la o comandă specifică, sumă exactă, informație despre procesul standard de rambursare."
+  }
+]
