@@ -72,20 +72,3 @@ def render_html_email(email_data):
     html = header_html + body_html + footer_html
     
     return html
-
-# Exemplu de utilizare în aplicație:
-
-# Pentru fiecare email, generăm HTML-ul
-email1_html = render_html_email(email1)
-email2_html = render_html_email(email2)
-
-# Afișăm în coloane
-col1, col2 = st.columns(2)
-
-with col1:
-    st.subheader("Mesaj #1")
-    st.markdown(email1_html, unsafe_allow_html=True)
-
-with col2:
-    st.subheader("Mesaj #2")
-    st.markdown(email2_html, unsafe_allow_html=True)
