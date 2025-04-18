@@ -221,19 +221,15 @@ with main_container:
     col1, col2 = st.columns(2)
     
     # Modul de afișare depinde de setarea de renderare avansată
-    if st.session_state.advanced_rendering:
-        # Folosim renderarea HTML pentru un aspect mai realist
-        email1_html = render_html_email(st.session_state.items[0]["email"])
-        email2_html = render_html_email(st.session_state.items[1]["email"])
-        
-        with col1:
-            st.subheader("Mesaj #1")
-            st.markdown(email1_html, unsafe_allow_html=True)
-        
-        with col2:
-            st.subheader("Mesaj #2")
-            st.markdown(email2_html, unsafe_allow_html=True)
-    else:
+    with col1:
+    st.subheader("Mesaj #1")
+    st.text_area("Subiect:", st.session_state.items[0]["email"]["subject"], height=50, key="subj1", disabled=True)
+    st.text_area("", st.session_state.items[0]["email"]["body"], height=250, key="body1", disabled=True)
+
+    with col2:
+    st.subheader("Mesaj #2")
+    st.text_area("Subiect:", st.session_state.items[1]["email"]["subject"], height=50, key="subj2", disabled=True)
+    st.text_area("", st.session_state.items[1]["email"]["body"], height=250, key="body2", disabled=True)    else:
         # Folosim modul simplu de afișare
         with col1:
             st.subheader("Mesaj #1")
