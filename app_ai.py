@@ -104,7 +104,7 @@ def generate_emails_with_ai(phishing_type):
         
         # Request pentru email legitim
         response_real = requests.post(
-            "https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf",
+            "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
             headers=headers,
             json={"inputs": prompt_real, "parameters": {"max_length": 300}}
         )
