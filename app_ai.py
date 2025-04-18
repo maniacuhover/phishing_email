@@ -110,8 +110,8 @@ def generate_emails_with_ai(phishing_type):
     
     # Dacă avem cheie API, facem cererea către serviciul AI
     try:
-        # Folosim un model mai accesibil
-        MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+        # Folosim un model mai mic, compatibil cu API-ul gratuit
+        MODEL_URL = "https://api-inference.huggingface.co/models/gpt2"
         
         # Prompt pentru email legitim
         prompt_real = f"""
@@ -133,13 +133,14 @@ def generate_emails_with_ai(phishing_type):
             "Content-Type": "application/json"
         }
         
-        # Request pentru email legitim cu parametri ajustați
+        # Request pentru email legitim cu parametri ajustați pentru model mai mic
         real_payload = {
             "inputs": prompt_real,
             "parameters": {
-                "max_new_tokens": 300,
-                "temperature": 0.7,
-                "top_p": 0.9
+                "max_length": 200,
+                "temperature": 0.8,
+                "top_p": 0.9,
+                "do_sample": True
             }
         }
         
@@ -167,9 +168,10 @@ def generate_emails_with_ai(phishing_type):
         fake_payload = {
             "inputs": prompt_fake,
             "parameters": {
-                "max_new_tokens": 300,
-                "temperature": 0.7,
-                "top_p": 0.9
+                "max_length": 200,
+                "temperature": 0.8,
+                "top_p": 0.9,
+                "do_sample": True
             }
         }
         response_fake = make_api_request(fake_payload)
@@ -182,9 +184,8 @@ def generate_emails_with_ai(phishing_type):
                 
                 # Afișăm informații despre structura răspunsului pentru debug
                 st.sidebar.info(f"Structura răspuns real: {type(real_json)}")
-                st.sidebar.info(f"Structura răspuns fake: {type(fake_json)}")
                 
-                # Adaptăm extragerea în funcție de structura răspunsului
+                # Adaptăm extragerea în funcție de structura răspunsului specifică modelului GPT-2
                 if isinstance(real_json, list) and len(real_json) > 0:
                     real_text = real_json[0].get("generated_text", "")
                 elif isinstance(real_json, dict):
@@ -199,25 +200,50 @@ def generate_emails_with_ai(phishing_type):
                 else:
                     fake_text = str(fake_json)  # Fallback
                 
-                # Extragem subiect și corp
-                real_lines = real_text.split("\n")
-                fake_lines = fake_text.split("\n")
+                # Pentru modelul GPT-2, răspunsul ar putea să nu fie structurat cu subiect
+                # Așa că vom crea un format manual
                 
-                real_subject = next((line for line in real_lines if "subiect" in line.lower()), "Email legitim")
-                fake_subject = next((line for line in fake_lines if "subiect" in line.lower()), "URGENȚĂ: Acțiune necesară")
+                # Convertim textul generat în format de email
+                def format_as_email(text, is_phishing=False):
+                    lines = text.split("\n")
+                    
+                    # Creăm un subiect adecvat
+                    if is_phishing:
+                        subject = f"URGENT: Acțiune necesară - {phishing_type}"
+                        if len(lines) > 0 and len(lines[0]) < 60:  # Folosim prima linie ca subiect dacă e scurtă
+                            subject = lines[0]
+                    else:
+                        subject = f"Informare privind {phishing_type}"
+                        if len(lines) > 0 and len(lines[0]) < 60:
+                            subject = lines[0]
+                    
+                    # Corpul emailului
+                    body = "\n".join(lines[1:] if len(lines) > 1 else lines)
+                    
+                    # Adăugăm elemente specifice pentru phishing
+                    if is_phishing:
+                        if "http" not in body:
+                            body += f"\n\nVerifică urgent aici: http://verificare-{phishing_type.lower().replace(' ', '-')}.com"
+                        if "urgent" not in body.lower():
+                            body += "\n\nAcțiune urgentă necesară!"
+                    
+                    # Adăugăm semnătură pentru email legitim
+                    if not is_phishing:
+                        if "Cu stimă" not in body:
+                            body += "\n\nCu stimă,\nEchipa de Support"
+                    
+                    return {
+                        "subject": subject,
+                        "body": body
+                    }
                 
-                real_body = "\n".join(line for line in real_lines if "subiect" not in line.lower())
-                fake_body = "\n".join(line for line in fake_lines if "subiect" not in line.lower())
+                # Formatăm răspunsurile ca emailuri
+                real_email = format_as_email(real_text, is_phishing=False)
+                fake_email = format_as_email(fake_text, is_phishing=True)
                 
                 return {
-                    "real": {
-                        "subject": real_subject.replace("Subiect:", "").strip(),
-                        "body": real_body.strip()
-                    },
-                    "fake": {
-                        "subject": fake_subject.replace("Subiect:", "").strip(),
-                        "body": fake_body.strip()
-                    }
+                    "real": real_email,
+                    "fake": fake_email
                 }
             except Exception as e:
                 st.error(f"Eroare la procesarea răspunsului: {str(e)}")
@@ -233,15 +259,15 @@ def generate_emails_with_ai(phishing_type):
             
     except Exception as e:
         st.error(f"Eroare detaliată la generarea cu AI: {str(e)}")
-        # Răspuns de fallback
+        # Răspuns de fallback - emailuri predefinite bune pentru acest tip
         return {
             "real": {
-                "subject": f"Email legitim despre {phishing_type}",
-                "body": f"Acesta este un email legitim despre {phishing_type}.\n\nAre un ton profesional, nu solicită date personale și folosește un domeniu oficial."
+                "subject": f"Informare privind {phishing_type}",
+                "body": f"Stimată doamnă/Stimate domn,\n\nVă trimitem această informare privind {phishing_type}. \n\nDacă aveți întrebări, vă rugăm să ne contactați la numărul de telefon oficial sau să vizitați site-ul nostru www.companie-legitima.ro.\n\nCu stimă,\nEchipa de Relații Clienți"
             },
             "fake": {
-                "subject": f"URGENT: Situație de {phishing_type}!!!",
-                "body": f"ATENȚIE! Acesta este un email de phishing pentru {phishing_type}.\n\nAre un ton urgent, solicită acțiune imediată și probabil conține un link suspect: http://website-fals.com"
+                "subject": f"URGENT: Problemă de securitate - {phishing_type}",
+                "body": f"ATENȚIE!\n\nAm detectat o activitate suspectă legată de {phishing_type}. \n\nPentru a preveni compromiterea contului, vă rugăm să accesați urgent acest link: http://verificare-securitate.net și să introduceți datele de autentificare pentru verificare.\n\nDepartamentul de Securitate"
             }
         }
 
