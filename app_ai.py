@@ -12,82 +12,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Funcția pentru renderarea HTML a emailurilor
-def render_html_email(email_data):
-    """
-    Transformă un obiect email într-un format HTML realist
-    
-    Args:
-        email_data: Dicționar cu datele emailului
-    
-    Returns:
-        str: Reprezentarea HTML a emailului
-    """
-    company_logo = email_data.get("logo", "COMPANIE")
-    company_color = email_data.get("colors", "#007bff")
-    sender_name = email_data.get("sender", "Expeditor")
-    sender_email = email_data.get("sender_email", "expeditor@domain.com")
-    subject = email_data.get("subject", "Subiect email")
-    body = email_data.get("body", "").replace("\n", "<br>")
-    date = email_data.get("date", "01.01.2025")
-    footer = email_data.get("footer", "© 2025 Companie")
-    
-    # Construim headerul emailului în stil realist
-    header_html = f"""
-    <div style="border: 1px solid #ddd; border-radius: 8px; max-width: 100%; font-family: Arial, sans-serif; margin-bottom: 20px;">
-        <!-- Header -->
-        <div style="background-color: {company_color}; color: white; padding: 15px; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-            <table width="100%">
-                <tr>
-                    <td><h2 style="margin: 0;">{company_logo}</h2></td>
-                    <td align="right" style="font-size: 12px;">
-                        {date}
-                    </td>
-                </tr>
-            </table>
-        </div>
-        
-        <!-- Email metadata -->
-        <div style="background-color: #f8f9fa; padding: 10px 15px; border-bottom: 1px solid #ddd;">
-            <table width="100%" style="font-size: 13px;">
-                <tr>
-                    <td width="60"><strong>De la:</strong></td>
-                    <td>{sender_name} &lt;{sender_email}&gt;</td>
-                </tr>
-                <tr>
-                    <td><strong>Către:</strong></td>
-                    <td>recipient@example.com</td>
-                </tr>
-                <tr>
-                    <td><strong>Subiect:</strong></td>
-                    <td>{subject}</td>
-                </tr>
-            </table>
-        </div>
-    """
-    
-    # Construim corpul emailului
-    body_html = f"""
-        <!-- Email body -->
-        <div style="padding: 15px; line-height: 1.5;">
-            {body}
-        </div>
-    """
-    
-    # Construim footerul emailului
-    footer_html = f"""
-        <!-- Footer -->
-        <div style="background-color: #f8f9fa; padding: 10px 15px; font-size: 11px; color: #6c757d; border-top: 1px solid #ddd; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
-            {footer}
-        </div>
-    </div>
-    """
-    
-    # Combinăm toate componentele
-    html = header_html + body_html + footer_html
-    
-    return html
-
 # Funcție pentru încărcarea exemplelor predefinite
 @st.cache_data
 def load_examples():
@@ -145,23 +69,11 @@ def generate_emails(phishing_type):
         return {
             "real": {
                 "subject": f"Email legitim despre {phishing_type}",
-                "body": f"Acesta este un email legitim generat pentru {phishing_type}.\n\nAre un ton profesional, nu solicită date personale și folosește un domeniu oficial.",
-                "sender": "Serviciul Clienți",
-                "sender_email": "serviciu@companie-legitima.ro",
-                "logo": "COMPANIE",
-                "colors": "#007bff",
-                "date": datetime.now().strftime("%d.%m.%Y"),
-                "footer": "© 2025 Companie Legitimă | Toate drepturile rezervate"
+                "body": f"Acesta este un email legitim generat pentru {phishing_type}.\n\nAre un ton profesional, nu solicită date personale și folosește un domeniu oficial."
             },
             "fake": {
                 "subject": f"URGENT: Situație de {phishing_type}!!!",
-                "body": f"ATENȚIE! Acesta este un email de phishing generat pentru {phishing_type}.\n\nAre un ton urgent, solicită acțiune imediată și probabil conține un link suspect: http://website-fals.com",
-                "sender": "Departament Securitate",
-                "sender_email": "security@companie-1egitima.com",
-                "logo": "COMPANIE",
-                "colors": "#cc0000",
-                "date": datetime.now().strftime("%d.%m.%Y"),
-                "footer": "© 2025 Companie | Securitate"
+                "body": f"ATENȚIE! Acesta este un email de phishing generat pentru {phishing_type}.\n\nAre un ton urgent, solicită acțiune imediată și probabil conține un link suspect: http://website-fals.com"
             }
         }
     
@@ -219,23 +131,11 @@ def generate_emails(phishing_type):
             return {
                 "real": {
                     "subject": real_subject.replace("Subiect:", "").strip(),
-                    "body": real_body.strip(),
-                    "sender": "Serviciul Clienți",
-                    "sender_email": "serviciu@companie-legitima.ro",
-                    "logo": "COMPANIE",
-                    "colors": "#007bff",
-                    "date": datetime.now().strftime("%d.%m.%Y"),
-                    "footer": "© 2025 Companie Legitimă | Toate drepturile rezervate"
+                    "body": real_body.strip()
                 },
                 "fake": {
                     "subject": fake_subject.replace("Subiect:", "").strip(),
-                    "body": fake_body.strip(),
-                    "sender": "Departament Securitate",
-                    "sender_email": "security@companie-1egitima.com",
-                    "logo": "COMPANIE",
-                    "colors": "#cc0000",
-                    "date": datetime.now().strftime("%d.%m.%Y"),
-                    "footer": "© 2025 Companie | Securitate"
+                    "body": fake_body.strip()
                 }
             }
         else:
@@ -248,23 +148,11 @@ def generate_emails(phishing_type):
         return {
             "real": {
                 "subject": f"Email legitim despre {phishing_type}",
-                "body": f"Acesta este un email legitim despre {phishing_type}.\n\nAre un ton profesional, nu solicită date personale și folosește un domeniu oficial.",
-                "sender": "Serviciul Clienți",
-                "sender_email": "serviciu@companie-legitima.ro",
-                "logo": "COMPANIE",
-                "colors": "#007bff",
-                "date": datetime.now().strftime("%d.%m.%Y"),
-                "footer": "© 2025 Companie Legitimă | Toate drepturile rezervate"
+                "body": f"Acesta este un email legitim despre {phishing_type}.\n\nAre un ton profesional, nu solicită date personale și folosește un domeniu oficial."
             },
             "fake": {
                 "subject": f"URGENT: Situație de {phishing_type}!!!",
-                "body": f"ATENȚIE! Acesta este un email de phishing pentru {phishing_type}.\n\nAre un ton urgent, solicită acțiune imediată și probabil conține un link suspect: http://website-fals.com",
-                "sender": "Departament Securitate",
-                "sender_email": "security@companie-1egitima.com",
-                "logo": "COMPANIE",
-                "colors": "#cc0000",
-                "date": datetime.now().strftime("%d.%m.%Y"),
-                "footer": "© 2025 Companie | Securitate"
+                "body": f"ATENȚIE! Acesta este un email de phishing pentru {phishing_type}.\n\nAre un ton urgent, solicită acțiune imediată și probabil conține un link suspect: http://website-fals.com"
             }
         }
 
@@ -279,8 +167,6 @@ if "start_time" not in st.session_state:
     st.session_state.start_time = datetime.now()
 if "ai_mode" not in st.session_state:
     st.session_state.ai_mode = False
-if "advanced_rendering" not in st.session_state:
-    st.session_state.advanced_rendering = True
 
 # Încărcăm exemplele
 examples = load_examples()
@@ -312,10 +198,6 @@ with st.sidebar:
         if "current_example" in st.session_state:
             del st.session_state.current_example
     
-    advanced_rendering = st.toggle("Renderare avansată emailuri", value=st.session_state.advanced_rendering)
-    if advanced_rendering != st.session_state.advanced_rendering:
-        st.session_state.advanced_rendering = advanced_rendering
-    
     if st.button("Resetează scorul"):
         st.session_state.score = 0
         st.session_state.total = 0
@@ -341,48 +223,24 @@ with main_container:
             with st.spinner("Generez emailuri cu AI..."):
                 generated = generate_emails(example_type)
                 
-                # Pregătim emailurile complete
-                real_email = generated["real"]
-                fake_email = generated["fake"]
+                # Setăm exemplul curent
+                st.session_state.current_example = {
+                    "type": example_type,
+                    "real": generated["real"],
+                    "fake": generated["fake"],
+                    "explanation": explanation
+                }
         else:
             # Folosim exemplul predefinit
             example = next((ex for ex in examples if ex["type"] == example_type), examples[0])
             
-            # Pregătim emailurile complete
-            real_email = {
-                "subject": example["real"]["subject"],
-                "body": example["real"]["body"],
-                "sender": "Serviciul Clienți",
-                "sender_email": "serviciu@companie-legitima.ro",
-                "logo": "COMPANIE",
-                "colors": "#007bff",
-                "date": datetime.now().strftime("%d.%m.%Y"),
-                "footer": "© 2025 Companie Legitimă | Toate drepturile rezervate"
-            }
-            
-            fake_email = {
-                "subject": example["fake"]["subject"],
-                "body": example["fake"]["body"],
-                "sender": "Departament Securitate",
-                "sender_email": "security@companie-1egitima.com",
-                "logo": "COMPANIE", 
-                "colors": "#cc0000",
-                "date": datetime.now().strftime("%d.%m.%Y"),
-                "footer": "© 2025 Companie | Securitate"
-            }
-        
-        # Setăm exemplul curent
-        st.session_state.current_example = {
-            "type": example_type,
-            "real": real_email,
-            "fake": fake_email,
-            "explanation": explanation
-        }
+            # Setăm exemplul curent
+            st.session_state.current_example = example
         
         # Pregătim lista cu două intrări și amestecăm ordinea
         items = [
-            {"email": st.session_state.current_example["real"], "is_phish": False},
-            {"email": st.session_state.current_example["fake"], "is_phish": True}
+            {"text": f"Subiect: {st.session_state.current_example['real']['subject']}\n\n{st.session_state.current_example['real']['body']}", "is_phish": False},
+            {"text": f"Subiect: {st.session_state.current_example['fake']['subject']}\n\n{st.session_state.current_example['fake']['body']}", "is_phish": True}
         ]
         random.shuffle(items)
         st.session_state.items = items
@@ -401,30 +259,14 @@ with main_container:
     
     col1, col2 = st.columns(2)
     
-    # Modul de afișare depinde de setarea de renderare avansată
-    if st.session_state.advanced_rendering:
-        # Folosim renderarea HTML pentru un aspect mai realist
-        email1_html = render_html_email(st.session_state.items[0]["email"])
-        email2_html = render_html_email(st.session_state.items[1]["email"])
-        
-        with col1:
-            st.subheader("Mesaj #1")
-            st.markdown(email1_html, unsafe_allow_html=True)
-        
-        with col2:
-            st.subheader("Mesaj #2")
-            st.markdown(email2_html, unsafe_allow_html=True)
-    else:
-        # Folosim modul simplu de afișare
-        with col1:
-            st.subheader("Mesaj #1")
-            st.text_area("Subiect:", st.session_state.items[0]["email"]["subject"], height=50, key="subj1", disabled=True)
-            st.text_area("", st.session_state.items[0]["email"]["body"], height=250, key="body1", disabled=True)
-        
-        with col2:
-            st.subheader("Mesaj #2")
-            st.text_area("Subiect:", st.session_state.items[1]["email"]["subject"], height=50, key="subj2", disabled=True)
-            st.text_area("", st.session_state.items[1]["email"]["body"], height=250, key="body2", disabled=True)
+    # Afișăm emailurile în format simplu
+    with col1:
+        st.subheader("Mesaj #1")
+        st.text_area("", st.session_state.items[0]["text"], height=300, key="msg1", disabled=True)
+    
+    with col2:
+        st.subheader("Mesaj #2")
+        st.text_area("", st.session_state.items[1]["text"], height=300, key="msg2", disabled=True)
     
     # Secțiunea de decizie
     choice = st.radio("Care dintre mesaje crezi că este phishing?", ["Mesaj #1", "Mesaj #2"])
@@ -449,8 +291,7 @@ with main_container:
         st.info(f"Răspunsul corect era: Mesaj #{correct_idx + 1}")
         
         # Evidențiem elementele de phishing
-        phish_idx = correct_idx
-        phish_email = st.session_state.items[phish_idx]["email"]
+        phish_text = st.session_state.items[correct_idx]["text"]
         
         st.subheader("Analiză detaliată a mesajului de phishing:")
         
@@ -459,26 +300,18 @@ with main_container:
             st.markdown("**Semne de phishing:**")
             signs = []
             
-            # Verificăm adresa de email
-            sender_email = phish_email["sender_email"]
-            if "1" in sender_email or "-" in sender_email or sender_email.count(".") > 2:
-                signs.append("Adresă de email suspectă")
+            # Verificăm subiectul și corpul
+            if "URGENT" in phish_text or "urgent" in phish_text.lower() or "imediat" in phish_text.lower():
+                signs.append("Ton de urgență")
             
-            # Verificăm subiectul
-            subject = phish_email["subject"]
-            if "URGENT" in subject or "imediat" in subject.lower() or "acum" in subject.lower():
-                signs.append("Ton de urgență în subiect")
-            
-            # Verificăm corpul
-            body = phish_email["body"]
-            if "http://" in body or "bit.ly" in body:
+            if "http://" in phish_text or "bit.ly" in phish_text:
                 signs.append("Link-uri suspecte")
             
-            if "card" in body.lower() or "parola" in body.lower() or "cont" in body.lower():
+            if "card" in phish_text.lower() or "parola" in phish_text.lower() or "date" in phish_text.lower():
                 signs.append("Solicitare de date personale")
             
-            if "urgent" in body.lower() or "imediat" in body.lower():
-                signs.append("Presiune de timp")
+            if len(signs) == 0:
+                signs.append("Verifică tonul general și contextul mesajului")
             
             for sign in signs:
                 st.markdown(f"- {sign}")
