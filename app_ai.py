@@ -2,9 +2,7 @@ import streamlit as st
 import random
 import json
 import os
-import requests
 from datetime import datetime
-import time
 
 # Configurare pagină
 st.set_page_config(
@@ -59,16 +57,28 @@ def load_examples():
                 "explanation": "Fals: domeniu fals (banca-x.secureverify.com), solicitare date card, ton de urgență."
             },
             {
-                "type": "Ofertă falsă",
+                "type": "Coș cadou Paște",
                 "real": {
-                    "subject": "Promoție de vară la produsele electronice",
-                    "body": "Dragi clienți,\n\nVă anunțăm că începând cu data de 15 iunie, toate produsele electronice vor beneficia de reduceri de până la 30%.\n\nPentru mai multe detalii și catalog complet, vizitați magazinul nostru sau www.electroshop.ro.\n\nEchipa ElectroShop"
+                    "subject": "Ofertă specială de Paște - Lindt Romania",
+                    "body": "Dragi clienți,\n\nCu ocazia sărbătorilor pascale, vă oferim reduceri de 15% la toate produsele noastre de ciocolată.\n\nVizitați magazinul nostru sau accesați www.lindt.ro/paste pentru a vedea ofertele.\n\nVă dorim Sărbători Fericite!\nEchipa Lindt România"
                 },
                 "fake": {
-                    "subject": "FELICITĂRI! Ai câștigat un iPhone 15!",
-                    "body": "Felicitări!\n\nAi fost selectat aleatoriu pentru a primi un iPhone 15 GRATUIT!\n\nPentru a revendica premiul, accesează link-ul: www.winner-claim.xyz/iphone și completează formularul cu datele tale personale și adresa de livrare în 48 de ore.\n\nEchipa Winner"
+                    "subject": "🐰 CADOU GRATUIT - Coș de Paște Lindt pentru tine!",
+                    "body": "Felicitări! Ai fost selectat să primești un coș de Paște Lindt GRATUIT!\n\nPentru a-ți revendica coșul cadou, completează chestionarul nostru scurt (30 de secunde) și plătește doar taxa de livrare 4,99 lei:\n\nhttp://lindt-easter-gift.com/claim\n\nOfertă valabilă doar azi!\nEchipa Promoții de Paște"
                 },
-                "explanation": "Fals: ofertă prea bună pentru a fi adevărată, domeniu suspect (.xyz), solicită date personale. Real: promoție rezonabilă, site oficial, nu solicită date personale."
+                "explanation": "Fals: domeniu fals care imită brandul Lindt, ofertă prea bună pentru a fi adevărată (cadou 'gratuit' dar cere taxă), presiune de timp. Real: site oficial, reducere rezonabilă, nu solicită date personale."
+            },
+            {
+                "type": "Vouchere și cupoane",
+                "real": {
+                    "subject": "Voucher cadou pentru aniversarea colaborării noastre",
+                    "body": "Dragă client,\n\nCu ocazia aniversării a 3 ani de când ești clientul nostru, îți oferim un voucher în valoare de 50 RON.\n\nPoți folosi codul ANIV50 la următoarea comandă pe site-ul nostru www.magazin-oficial.ro până la data de 31.12.2023.\n\nEchipa Magazin Oficial"
+                },
+                "fake": {
+                    "subject": "IMPORTANT: Voucher KAUFLAND de 250 EUR - Sondaj Clienți",
+                    "body": "Stimați clienți Kaufland,\n\nSărbătorim 15 ani în România și oferim 100 vouchere de 250 EUR!\n\nPentru a obține voucher-ul, completează un scurt sondaj (2 minute) și introduceți datele dvs. pentru validare:\n\nhttp://kaufland-voucher.online/ro\n\nPrimii 100 de participanți vor primi voucherul direct pe email.\nEchipa Kaufland România"
+                },
+                "explanation": "Fals: domeniu suspect (.online), valoare nerealist de mare a voucherului, urgență (primii 100), solicită date personale. Real: ofertă realistă de valoare moderată, cod de voucher furnizat direct în email."
             },
             {
                 "type": "Impersonare CEO",
@@ -77,10 +87,10 @@ def load_examples():
                     "body": "Bună ziua tuturor,\n\nVă mulțumesc pentru participarea la prezentarea trimestrială de ieri.\n\nVă rog să trimiteți feedback-ul și sugestiile în formularul din intranet până vineri.\n\nCu stimă,\nAna Marinescu\nDirector General\nam@compania.ro"
                 },
                 "fake": {
-                    "subject": "Solicitare urgentă - confidențial",
-                    "body": "Salut,\n\nSunt în mijlocul unei întâlniri importante și am nevoie urgent să achiziționez niște carduri cadou pentru un client VIP.\n\nPoți să cumperi 5 carduri Amazon a câte 200 EUR și să-mi trimiți codurile pe acest email?\n\nVoi aproba rambursarea imediat ce mă întorc.\n\nMulțumesc,\nAna Marinescu\nDirector General\nanam_ceo@gmail.com"
+                    "subject": "Solicitare discretă - te rog răspunde imediat",
+                    "body": "Salut,\n\nMă aflu într-o întâlnire confidențială și nu pot vorbi la telefon. Avem nevoie urgent de niște carduri cadou Google Play pentru un client important.\n\nPoți să cumperi 5 carduri a câte 200 EUR și să-mi trimiți codurile pe WhatsApp la nr +40755123456? Voi aproba rambursarea astăzi.\n\nSunt presată de timp, te rog confirmă în 15 minute.\n\nMulțumesc,\nAna Marinescu\nDirector General\nana.marinescu.ceo@gmail.com"
                 },
-                "explanation": "Fals: ton urgent, adresă de email suspectă (gmail personal în loc de domeniul companiei), solicitare neobișnuită de bani/carduri. Real: adresă oficială de email, solicitare profesională normală."
+                "explanation": "Fals: adresă de email personală (gmail) în loc de domeniul companiei, solicitare urgentă de bani/carduri, cerere de comunicare pe alt canal, presiune extremă de timp. Real: adresă oficială de email, solicitare profesională normală."
             },
             {
                 "type": "Actualizare de securitate",
@@ -89,34 +99,58 @@ def load_examples():
                     "body": "Stimate utilizator,\n\nAm actualizat politica noastră de securitate.\n\nVă rugăm să vă autentificați în contul dvs. de pe site-ul nostru www.serviciu-web.ro și să revizuiți noii termeni din secțiunea 'Setări cont'.\n\nEchipa de Securitate\nServiceWeb"
                 },
                 "fake": {
-                    "subject": "URGENT: Actualizare de securitate necesară ACUM",
-                    "body": "Atenție!\n\nContul dvs. este expus riscurilor! Trebuie să actualizați imediat parola accesând acest link: http://service-web.security-login.com\n\nIntroduceți parola actuală și setați una nouă în maxim 2 ore sau contul va fi suspendat.\n\nDepartamentul Tehnic"
+                    "subject": "⚠ ALERTA DE SECURITATE: Contul dvs. a fost COMPROMIS",
+                    "body": "URGENT - Acțiune Imediată Necesară!\n\nAm detectat o încercare de acces neautorizat la contul dvs!\n\nPentru a preveni pierderea accesului, trebuie să vă verificați contul în următoarele 2 ore accesând:\n\nhttp://account-security-verification.com/verify\n\nVeți avea nevoie de parola actuală și detaliile cardului de credit pentru verificare.\n\nEchipa de Securitate"
                 },
-                "explanation": "Fals: ton alarmist, domeniu fals (service-web.security-login.com), cere direct parola. Real: trimite către site-ul oficial, nu solicită informații sensibile prin email."
+                "explanation": "Fals: ton extrem de alarmist, domeniu generic, solicitare de informații sensibile (parolă și card), presiune extremă de timp. Real: ton profesional, trimitere către site-ul oficial, nu solicită date sensibile prin email."
             },
             {
-                "type": "Suport tehnic fals",
+                "type": "Felicitare electronică falsă",
+                "real": {
+                    "subject": "O felicitare virtuală pentru tine",
+                    "body": "Dragă prieten,\n\nȚi-am trimis o felicitare virtuală pentru a sărbători prietenia noastră.\n\nO poți vizualiza accesând www.ecards-official.com/view/card/12345 - nu este necesară nicio înregistrare sau descărcare.\n\nCu drag,\nAndreea"
+                },
+                "fake": {
+                    "subject": "Cineva ți-a trimis o FELICITARE SPECIALĂ! 💌",
+                    "body": "Cineva special s-a gândit la tine!\n\nUn prieten ți-a trimis o felicitare personalizată. Pentru a o vedea, descarcă atașamentul sau accesează:\n\nhttp://special-ecards.co/view?id=12345\n\nNOTĂ: Felicitarea va expira în 24 de ore, grăbește-te să o vezi!\n\nEchipa Special E-Cards"
+                },
+                "explanation": "Fals: expeditor necunoscut, presiune de timp, solicitare de descărcare de atașamente, domeniu suspect (.co). Real: domeniu clar, fără presiune de timp, menționează explicit că nu este necesară descărcarea sau înregistrarea."
+            },
+            {
+                "type": "Fraudă cu suport tehnic",
                 "real": {
                     "subject": "Confirmare ticket suport #12345",
                     "body": "Bună ziua,\n\nAm înregistrat solicitarea dvs. cu numărul de ticket #12345.\n\nUn specialist va analiza problema și vă va contacta în maxim 24 de ore.\n\nPuteți urmări statusul ticket-ului pe portalul nostru de suport.\n\nEchipa de Suport Tehnic\nsupport@companie.ro"
                 },
                 "fake": {
-                    "subject": "Alerta Virus Detectat pe Dispozitiv",
-                    "body": "AVERTISMENT: Am detectat un virus periculos pe dispozitivul dvs!\n\nDatele dvs. sunt în pericol! Sunați ACUM la +40 722 123 456 pentru asistență imediată de la echipa noastră Microsoft.\n\nSau accesați: http://windows-security-center.tech pentru scanare gratuită.\n\nEchipa de Securitate Microsoft"
+                    "subject": "⚠ ALERTĂ CRITICĂ: Virus detectat pe dispozitivul dvs",
+                    "body": "AVERTISMENT DE SECURITATE MICROSOFT!\n\nAm detectat activitate suspectă pe dispozitivul dvs. Virușii detectați:\n- Trojan.BTC-Miner\n- Spyware.KeyLogger\n\nDatele și conturile dvs. bancare sunt în PERICOL IMINENT!\n\nSunați ACUM la numărul dedicat: +40721000123 pentru asistență imediată, sau accesați:\nhttp://windows-security-center.tech\n\nNeintervenția în 3 ore poate duce la PIERDEREA TOTALĂ A DATELOR!\n\nEchipa de Securitate Microsoft"
                 },
-                "explanation": "Fals: pretinde că este de la Microsoft, număr de telefon suspect, domeniu neoficial, ton alarmist. Real: referire la un ticket specific, nu solicită acțiune urgentă, adresă email oficială."
+                "explanation": "Fals: ton extrem de alarmist, număr de telefon suspect, domeniu fals, presiune extremă de timp, exagerarea consecințelor. Real: ton profesional, referire la un număr de ticket specific."
             },
             {
-                "type": "Notificare livrare",
+                "type": "Notificare livrare falsă",
                 "real": {
                     "subject": "Comandă #A12345 - În curs de livrare",
-                    "body": "Bună ziua,\n\nComanda dvs. #A12345 a fost expediată și va fi livrată în data de 25.06.2023.\n\nPuteți urmări statusul folosind codul de tracking: RO123456789RO pe site-ul nostru www.curier-oficial.ro.\n\nEchipa Livrări\nCurier Oficial"
+                    "body": "Bună ziua,\n\nComanda dvs. #A12345 a fost expediată și va fi livrată în data de 25.06.2023.\n\nPuteți urmări statusul folosind codul de tracking: RO123456789RO pe site-ul nostru www.fan-courier.ro.\n\nEchipa Livrări\nFan Courier"
                 },
                 "fake": {
-                    "subject": "Colet reținut la vamă - Acțiune necesară",
-                    "body": "Atenție!\n\nColetul dvs. a fost reținut la vamă datorită unei taxe neplătite de 19,99 EUR.\n\nPentru a evita returnarea, accesați urgent: http://customs-delivery-pay.com și introduceți datele cardului pentru plata taxei.\n\nServiciul Vamal de Curierat"
+                    "subject": "⚠️ IMPORTANT: Coletul dvs. necesită confirmare de adresă",
+                    "body": "Stimate client,\n\nAvem un colet pentru dvs, dar livrarea a eșuat din cauza unei adrese incomplete.\n\nPentru a reprograma livrarea, vă rugăm să confirmați adresa folosind link-ul de mai jos:\n\nhttp://delivery-address-confirm.co/form\n\nVa trebui să plătiți o taxă de reprogramare de 3,99 lei cu cardul.\n\nDacă nu confirmați în 48h, coletul va fi returnat expeditorului.\n\nServiciul de Livrări"
                 },
-                "explanation": "Fals: solicită plată online pe un site suspect, nu menționează numărul specific al comenzii, domeniu suspect. Real: include număr de comandă și cod de tracking, trimite către site oficial."
+                "explanation": "Fals: nu specifică numele companiei de curierat, nu menționează nicio referință la comandă, solicită taxă de reprogramare, domeniu suspect, solicită date de card. Real: include număr de comandă și cod de tracking specific, trimite către site-ul oficial al companiei de curierat."
+            },
+            {
+                "type": "Sondaj fals cu premii",
+                "real": {
+                    "subject": "Invitație: Participă la studiul nostru anual de satisfacție",
+                    "body": "Dragă client,\n\nTe invităm să participi la studiul nostru anual privind satisfacția clienților. Completarea durează aproximativ 5 minute.\n\nParticipanții vor intra automat într-o tragere la sorți pentru un voucher de 300 RON.\n\nPoți accesa chestionarul pe site-ul nostru oficial: www.companie.ro/sondaj\n\nÎți mulțumim pentru feedback!\nEchipa de Relații Clienți"
+                },
+                "fake": {
+                    "subject": "🎁 FELICITĂRI! Ai fost selectat pentru premiul Samsung!",
+                    "body": "FELICITĂRI!\n\nDistozitivul tău a fost selectat aleatoriu pentru a câștiga un nou Samsung Galaxy S23 Ultra!\n\nPentru a revendica premiul, trebuie doar să participi la sondajul nostru scurt (3 întrebări) și să plătești taxa de procesare de doar 9,99 lei:\n\nhttp://samsung-winner-survey.com/claim\n\nAu mai rămas doar 2 telefoane! Grăbește-te!\n\nEchipa Promoții Samsung"
+                },
+                "explanation": "Fals: ofertă nerealistă, domeniu fals care imită brandul Samsung, urgență artificială ('doar 2 telefoane rămase'), solicită taxă pentru un premiu 'câștigat'. Real: ofertă rezonabilă, site oficial, explicație clară a procesului."
             },
             {
                 "type": "Reînnoire abonament",
@@ -125,22 +159,10 @@ def load_examples():
                     "body": "Stimate abonat,\n\nVă reamintim că abonamentul dvs. premium va expira pe data de 30.06.2023.\n\nPentru reînnoire, accesați contul dvs. pe www.serviciu-streaming.ro/cont și selectați opțiunea dorită.\n\nVă mulțumim că sunteți alături de noi!\n\nEchipa Serviciu Streaming"
                 },
                 "fake": {
-                    "subject": "ULTIMA ȘANSĂ: Abonamentul dvs. Netflix expiră AZI",
-                    "body": "Atenție: Abonamentul dvs. Netflix expiră astăzi!\n\nPentru a evita întreruperea serviciului, actualizați urgent detaliile de plată aici: http://netflix-renew.payment.com\n\nIntroduceți datele cardului pentru reînnoirea automată.\n\nEchipa Netflix"
+                    "subject": "⚠️ URGENT: Abonamentul dvs. Netflix a fost SUSPENDAT",
+                    "body": "Stimate client Netflix,\n\nAbonamentul dvs. a fost SUSPENDAT din cauza unei probleme de plată!\n\nPentru a evita pierderea permanentă a contului și a istoricului de vizionare, trebuie să actualizați URGENT informațiile de plată în următoarele 12 ore:\n\nhttp://netflix-account-billing.co/reactivate\n\nVă vom debita doar 1,99 EUR pentru verificare.\n\nEchipa de Facturare Netflix"
                 },
-                "explanation": "Fals: presiune extremă de timp, domeniu fals (netflix-renew.payment.com), solicită direct date de card. Real: oferă notificare din timp, trimite către site-ul oficial, nu solicită date sensibile prin email."
-            },
-            {
-                "type": "Donație falsă",
-                "real": {
-                    "subject": "Mulțumim pentru interesul față de cauza noastră",
-                    "body": "Dragă susținător,\n\nÎți mulțumim pentru interesul arătat față de proiectele noastre.\n\nDacă dorești să contribui, poți face o donație prin site-ul nostru oficial www.ong-salvare.ro/doneaza, unde vei găsi toate metodele de plată disponibile și detalii despre cum vor fi folosite fondurile.\n\nCu recunoștință,\nEchipa ONG Salvare"
-                },
-                "fake": {
-                    "subject": "URGENT: Apel pentru ajutor - Victimele dezastrului",
-                    "body": "Dragă om cu suflet mare,\n\nMii de victime ale dezastrului recent au nevoie URGENTĂ de ajutorul tău!\n\nDonează ACUM prin transfer direct în contul: RO11FAKE12345678900 sau folosește link-ul rapid de donație: http://help-disaster-victims.org/donate\n\nFiecare minut contează!\n\nFundația Internațională de Ajutor"
-                },
-                "explanation": "Fals: ton extrem de urgent, organizație nefamiliară, cont bancar sau link de donație direct în email. Real: direcționează către site-ul oficial, ton profesional, fără presiune."
+                "explanation": "Fals: ton alarmist, domeniu fals (.co în loc de .com), solicitare de plată pentru 'verificare', presiune extremă de timp. Real: notificare cu mult timp înainte, trimitere către site-ul oficial, fără presiune sau amenințări."
             },
             {
                 "type": "Oportunitate de investiții",
@@ -149,22 +171,10 @@ def load_examples():
                     "body": "Stimată Doamnă/Stimate Domn,\n\nVă invităm să participați la webinarul nostru despre strategii de investiții pentru 2023, care va avea loc pe data de 15 iulie.\n\nPentru a vă înscrie și a afla mai multe detalii, vizitați: www.banca-investitii.ro/webinare\n\nParticiparea este gratuită pentru clienții noștri.\n\nBanca de Investiții"
                 },
                 "fake": {
-                    "subject": "CONFIDENȚIAL: Oportunitate de investiții cu randament GARANTAT 50%",
-                    "body": "Oportunitate EXCLUSIVĂ de investiții!\n\nUn grup select de investitori poate acum accesa o oportunitate UNICĂ cu randament GARANTAT de 50% în doar 3 luni!\n\nLocuri limitate! Transferă minim 1000 EUR în contul: RO99FAKE87654321000 pentru a-ți rezerva poziția.\n\nRăspunde în 24h pentru detalii confidențiale!\n\nGrupul de Investiții Exclusive"
+                    "subject": "🔐 CONFIDENȚIAL: Oportunitate unică de investiție - Randament 200%",
+                    "body": "Stimate investitor,\n\nVă contactez pentru a vă oferi acces la o oportunitate de investiție ULTRA-EXCLUSIVĂ disponibilă doar pentru 10 investitori selectați cu atenție.\n\nInvestiția oferă un randament GARANTAT de 200% în doar 4 luni prin tehnologia noastră avansată de tranzacționare crypto.\n\nPentru a vă rezerva locul, este necesară o investiție minimă de 5000 EUR prin transfer în contul nostru securizat: RO29CRYP12345678900\n\nRăspundeți în 24h sau sunați la: +40755987654\n\nPartenerul dvs. de investiții,\nDr. Alexandru Profit\nCrypto Investment Group"
                 },
-                "explanation": "Fals: promisiune de câștig nerealist de mare, presiune de timp, solicită transfer direct de bani. Real: invitație la un eveniment informativ gratuit, fără solicitare de bani, site oficial."
-            },
-            {
-                "type": "Cupoane și discount-uri",
-                "real": {
-                    "subject": "Voucher cadou pentru aniversarea colaborării noastre",
-                    "body": "Dragă client,\n\nCu ocazia aniversării a 3 ani de când ești clientul nostru, îți oferim un voucher în valoare de 50 RON.\n\nPoți folosi codul ANIV50 la următoarea comandă pe site-ul nostru www.magazin-oficial.ro până la data de 31.12.2023.\n\nEchipa Magazin Oficial"
-                },
-                "fake": {
-                    "subject": "CÂȘTIGĂTOR! Voucher de 500 EUR la Carrefour",
-                    "body": "FELICITĂRI! Ai fost selectat pentru a primi un voucher GRATUIT de 500 EUR la Carrefour!\n\nPentru a revendica premiul, completează formularul de la: http://carrefour-vouchers.win cu datele tale personale și numărul cardului pentru verificare.\n\nOfertă validă doar 24 ore!\n\nEchipa Promoții Carrefour"
-                },
-                "explanation": "Fals: valoare nerealist de mare, domeniu suspect (.win), solicită date de card, presiune de timp extremă. Real: ofertă realistă, cod de voucher direct în email, site oficial, perioadă rezonabilă de valabilitate."
+                "explanation": "Fals: randament nerealist de mare, presiune de timp, solicitare de transferuri directe, lipsă de detalii concrete despre investiție, tonul exclusivist și secretos. Real: invitație la un eveniment informativ, fără solicitare de bani, prezentarea clară a companiei."
             },
             {
                 "type": "Confirmare comandă falsă",
@@ -173,10 +183,10 @@ def load_examples():
                     "body": "Mulțumim pentru comanda dvs.!\n\nComanda #B78901 a fost înregistrată cu succes.\nProduse comandate: Telefon Samsung Galaxy S23\nValoare totală: 3.299 RON\nData livrării estimate: 27.06.2023\n\nPentru detalii complete, accesați contul dvs. pe www.magazin-online.ro\n\nEchipa Magazin Online"
                 },
                 "fake": {
-                    "subject": "Comandă confirmată #XZ12345 - Plată eșuată",
-                    "body": "Comandă confirmată #XZ12345\n\nATENȚIE: Plata pentru comanda dvs. de iPhone 14 Pro (2.499 EUR) a eșuat.\n\nPentru a evita anularea, actualizați urgent detaliile de plată aici: http://order-payment-update.shop\n\nComanda va fi anulată automat în 2 ore dacă plata nu este procesată.\n\nDepartamentul Financiar"
+                    "subject": "Comandă Apple confirmată #APL78432 - Acțiune necesară",
+                    "body": "Comandă Apple confirmată\nNr. comandă: APL78432\n\nProduse: MacBook Pro 16\" 2023\nValoare: 12,499 RON\n\nATENȚIE: Am detectat o problemă cu metoda dvs. de plată. Plata nu a putut fi procesată.\n\nPentru a evita anularea comenzii, actualizați urgent detaliile cardului:\n\nhttp://apple-order-payment.net/confirm\n\nComanda va fi anulată automat în 4 ore dacă problema nu este rezolvată.\n\nDepartamentul Comenzi Apple"
                 },
-                "explanation": "Fals: comandă pe care nu ai făcut-o, presiune de timp, link suspect, solicită date de plată. Real: detalii specifice despre o comandă reală, trimitere către site-ul oficial, nu solicită acțiune urgentă."
+                "explanation": "Fals: comandă pe care probabil nu ai făcut-o, valoare foarte mare, domeniu fals care imită Apple, presiune de timp, solicită actualizarea datelor cardului. Real: detalii specifice despre comandă, trimitere către site-ul oficial, nu solicită acțiune urgentă."
             },
             {
                 "type": "Probleme cont social media",
@@ -185,10 +195,10 @@ def load_examples():
                     "body": "Bună ziua,\n\nVă informăm că am actualizat termenii și condițiile de utilizare.\n\nPuteți consulta noii termeni accesând secțiunea 'Setări cont' > 'Termeni și condiții' din contul dvs. sau vizitând www.facebook.com/terms.\n\nNu este necesară nicio acțiune pentru continuarea utilizării serviciilor noastre.\n\nEchipa Facebook"
                 },
                 "fake": {
-                    "subject": "ALERTĂ: Contul dvs. Facebook va fi dezactivat",
-                    "body": "URGENT: Contul dvs. a fost raportat pentru încălcarea regulilor comunității!\n\nContul dvs. va fi dezactivat în 24 de ore dacă nu confirmați identitatea.\n\nPentru verificare rapidă, accesați: http://facebook-verify-account.co și introduceți datele de autentificare.\n\nDepartamentul de Securitate Facebook"
+                    "subject": "⚠️ URGENT: Contul dvs. de Instagram va fi ȘTERS în 24h",
+                    "body": "AVERTISMENT FINAL\n\nContul dvs. de Instagram a fost raportat pentru încălcarea drepturilor de autor și a regulilor comunității!\n\nContul dvs. va fi ȘTERS PERMANENT în 24 de ore dacă nu contestați acuzațiile.\n\nPentru a verifica identitatea și a păstra contul, accesați:\n\nhttp://instagram-copyright-verify.com\n\nVa trebui să vă conectați cu numele de utilizator și parola pentru verificare.\n\nEchipa de Securitate Instagram"
                 },
-                "explanation": "Fals: domeniu fals (facebook-verify-account.co), ton alarmist, solicită date de autentificare. Real: trimite către site-ul oficial, nu solicită acțiuni urgente, ton profesional."
+                "explanation": "Fals: ton foarte alarmist, amenințare cu ștergerea contului, domeniu fals, solicitare de date de autentificare. Real: ton profesional, trimitere către site-ul oficial, fără presiune sau amenințări."
             },
             {
                 "type": "Verificare cont",
@@ -197,22 +207,10 @@ def load_examples():
                     "body": "Bună ziua,\n\nPentru a finaliza înregistrarea contului dvs. pe platforma noastră, vă rugăm să confirmați adresa de email accesând link-ul de mai jos:\n\nhttps://www.platforma-servicii.ro/confirmare?token=abc123\n\nLink-ul este valabil 48 de ore.\n\nDacă nu ați solicitat crearea unui cont, ignorați acest email.\n\nEchipa Platformă Servicii"
                 },
                 "fake": {
-                    "subject": "ULTIMĂ NOTIFICARE: Contul dvs. va fi suspendat",
-                    "body": "Contul dvs. este programat pentru suspendare din cauza unor activități suspecte!\n\nTrebuie să vă verificați IMEDIAT contul accesând: http://account-verification-secure.info și să introduceți numele de utilizator, parola și numărul de telefon pentru verificare.\n\nNeconfirmarea în 6 ore va duce la suspendarea definitivă!\n\nEchipa de Securitate"
+                    "subject": "⚠️ ACȚIUNE NECESARĂ: Verificare de securitate cont Google",
+                    "body": "Alertă de Securitate Google\n\nAm detectat o încercare de conectare neobișnuită la contul dvs. Google din Jakarta, Indonezia.\n\nDacă nu ați fost dvs., contul dvs. este în PERICOL IMINENT!\n\nVerificați-vă imediat contul și schimbați parola accesând:\n\nhttp://google-account-security.co/verify\n\nVeți avea nevoie de parola actuală și un nou cod de securitate care va fi trimis pe telefonul dvs.\n\nNeluarea de măsuri în 12 ore va duce la BLOCAREA CONTULUI.\n\nEchipa de Securitate Google"
                 },
-                "explanation": "Fals: domeniu suspect, solicită multiple date sensibile, presiune extremă de timp, nu menționează numele serviciului. Real: domeniu oficial, link cu token securizat, perioadă rezonabilă, instrucțiuni în caz de eroare."
-            },
-            {
-                "type": "Rambursare falsă",
-                "real": {
-                    "subject": "Confirmare rambursare comandă #C45678",
-                    "body": "Stimate client,\n\nVă informăm că am procesat cererea dvs. de rambursare pentru comanda #C45678.\n\nSuma de 249,99 RON a fost returnată pe cardul folosit la achiziție și va fi vizibilă în contul dvs. în 3-5 zile lucrătoare.\n\nPentru detalii, accesați istoricul comenzilor din contul dvs. pe www.magazin-electronic.ro.\n\nMagazin Electronic"
-                },
-                "fake": {
-                    "subject": "REFUND DISPONIBIL - 329,99 EUR Rambursare fiscală",
-                    "body": "Stimate contribuabil,\n\nAvem plăcerea să vă informăm că aveți o RAMBURSARE FISCALĂ în valoare de 329,99 EUR disponibilă!\n\nPentru a primi suma, accesați: http://tax-refund-gov.eu și completați formularul cu datele dvs. bancare pentru transfer direct.\n\nRambursarea expiră în 48 ore!\n\nAdministrația Fiscală"
-                },
-                "explanation": "Fals: domeniu fals care imită o instituție guvernamentală, sumă mare nejustificată, presiune de timp, solicită date bancare. Real: referință la o comandă specifică, sumă exactă, informație despre procesul standard de rambursare."
+                "explanation": "Fals: ton alarmist, domeniu fals, solicitare de parolă actuală, crearea unui sentiment de panică prin menționarea unei locații îndepărtate, presiune de timp. Real: ton neutru, domeniu oficial, utilizarea unui token de securitate, explicație clară a pașilor următori."
             }
         ]
 
@@ -253,15 +251,18 @@ if "quiz_complete" not in st.session_state:
     st.session_state.quiz_complete = False
 if "current_emails" not in st.session_state:
     st.session_state.current_emails = None
+if "phish_positions" not in st.session_state:
+    # Vom folosi această variabilă pentru a alterna poziția emailurilor de phishing
+    st.session_state.phish_positions = []
 
 # Încărcăm exemplele
 examples = load_examples()
 
 # Interfață utilizator
-st.title("🛡️ Vaccin Anti-Phishing")
+st.title("🛡️ Antrenament Anti-Phishing")
 st.markdown("""
-#### Antrenează-te să recunoști atacurile de phishing!
-Acest quiz te ajută să identifici mesajele frauduloase fără să îți cerem nicio informație personală.
+#### Dezvoltă-ți abilitățile de a identifica atacurile online!
+Acest simulator te pregătește să recunoști diverse tipuri de înșelătorii digitale întâlnite frecvent.
 """)
 
 # Sidebar cu scor, statistici și setări
@@ -294,6 +295,7 @@ with st.sidebar:
         st.session_state.answered_types = {}
         st.session_state.quiz_complete = False
         st.session_state.current_emails = None
+        st.session_state.phish_positions = []
         st.rerun()
 
 # Container principal
@@ -302,7 +304,7 @@ main_container = st.container()
 # Verificăm dacă quiz-ul a fost completat
 if st.session_state.quiz_complete:
     # Afișăm raportul final
-    st.header("🎓 Raport Final - Vaccinare Anti-Phishing Completă!")
+    st.header("🎓 Raport Final - Antrenament Complet!")
     
     # Calculăm scorul total și procent
     total_score = st.session_state.score
@@ -344,6 +346,7 @@ if st.session_state.quiz_complete:
         st.session_state.answered_types = {}
         st.session_state.quiz_complete = False
         st.session_state.current_emails = None
+        st.session_state.phish_positions = []
         st.rerun()
         
     # Sfaturi finale
@@ -351,19 +354,40 @@ if st.session_state.quiz_complete:
         st.markdown("""
         ### Principalele semne de phishing pe care să le cauți:
         
-        1. **Ton de urgență și presiune** - Emailurile de phishing creează adesea un sentiment de urgență pentru a te determina să acționezi impulsiv.
+        1. **URL-uri suspecte** - Verifică întotdeauna adresa URL înainte de a face click. Plasează cursorul peste link pentru a vedea adresa reală. Domenii suspicioase conțin:
+           - Domenii care imită branduri (de ex: arată similar dar au erori minore de scriere)
+           - Extensii neobișnuite (.xyz, .info, .co în loc de .com)
+           - Subdomenii ciudate (de ex: netflix.domeniu-suspect.com)
         
-        2. **URL-uri suspecte** - Verifică întotdeauna adresa URL înainte de a face click, chiar dacă textul vizibil pare legitim.
+        2. **Ton de urgență și presiune** - Mesajele care creează un sentiment de urgență ("Acum", "Urgent", "Imediat"):
+           - Avertismente de blocare/suspendare a contului
+           - Limite de timp artificiale ("Doar 24 ore", "Expiră azi")
+           - Oferte limitate ("Ultimele 2 produse")
         
-        3. **Solicitări de informații personale** - Companiile legitime nu cer niciodată informații sensibile prin email.
+        3. **Solicitări de informații sensibile** - Companiile legitime nu cer niciodată:
+           - Parole sau PIN-uri complete
+           - Detalii complete ale cardului
+           - Coduri de securitate prin email
         
-        4. **Oferte prea bune pentru a fi adevărate** - Câștiguri neașteptate, reduceri extreme sau oferte incredibile sunt adesea capcane.
+        4. **Oferte prea bune pentru a fi adevărate**:
+           - Câștiguri neașteptate la loterii la care nu ai participat
+           - Produse gratuite de valoare mare
+           - "Taxe de procesare" pentru premii mari
         
-        5. **Greșeli gramaticale și de ortografie** - Comunicările profesionale sunt de obicei verificate pentru greșeli.
+        5. **Verifică adresa expeditorului**:
+           - Nu te baza doar pe numele afișat
+           - Verifică întregul domeniu al adresei (după @)
+           - Companiile folosesc domenii corporative, nu servicii gratuite de email
         
-        6. **Adrese de email suspecte** - Verifică cu atenție adresa expeditorului, nu doar numele afișat.
+        6. **Greșeli și inconsistențe**:
+           - Erori gramaticale și de ortografie
+           - Formatare slabă sau inconsistentă
+           - Logo-uri de calitate scăzută sau distorsionate
         
-        7. **Link-uri și atașamente neașteptate** - Fii prudent cu atașamentele pe care nu le așteptai.
+        7. **Contactează direct compania**:
+           - În caz de dubii, nu folosi linkurile din email
+           - Deschide un browser nou și vizitează site-ul oficial
+           - Contactează compania prin canalele oficiale
         """)
 else:
     # Quiz în desfășurare
@@ -387,16 +411,112 @@ else:
             # Obținem exemple pentru tipul curent
             current_example = examples[st.session_state.current_index]
             
-            # Pregătim emailurile
-            real_email = current_example["real"]
-            fake_email = current_example["fake"]
+            # Funcție pentru a genera emailuri în mod dinamic
+            def generate_dynamic_emails(example_type, example_data):
+                """
+                Generează emailuri dinamice bazate pe șabloane sau AI
+                """
+                try:
+                    # Opțional, încearcă să folosești AI dacă este disponibil
+                    # Încearcă să folosești OpenAI (nu-l vom implementa aici pentru că necesită chei API)
+                    # În cazul eșecului, folosește datele locale
+                    
+                    # Simulăm diverse variații
+                    real_email = example_data["real"].copy()
+                    fake_email = example_data["fake"].copy()
+                    
+                    # Adăugăm variații aleatorii pentru a face emailurile mai realiste
+                    current_date = datetime.now().strftime("%d.%m.%Y")
+                    tomorrow = (datetime.now() + datetime.timedelta(days=1)).strftime("%d.%m.%Y")
+                    
+                    # Variații pentru emailul real
+                    if "data" in real_email["body"]:
+                        real_email["body"] = real_email["body"].replace("25.06.2023", current_date)
+                    if "30.06.2023" in real_email["body"]:
+                        real_email["body"] = real_email["body"].replace("30.06.2023", tomorrow)
+                    
+                    # Variații pentru emailul fals - facem să pară mai legitim dar păstrăm caracteristicile de phishing
+                    fake_subject = fake_email["subject"]
+                    
+                    # Rotație a formulărilor urgente pentru a face phishing-ul mai greu de detectat
+                    urgent_terms = ["URGENT", "IMPORTANT", "ACȚIUNE NECESARĂ", "ATENȚIE", "ALERTĂ"]
+                    warning_symbol = ["⚠️", "🚨", "❗", "⛔", "🔴"]
+                    
+                    if any(term in fake_subject for term in urgent_terms):
+                        # Înlocuim un termen urgent cu altul pentru a varia
+                        for term in urgent_terms:
+                            if term in fake_subject:
+                                new_term = random.choice([t for t in urgent_terms if t != term])
+                                fake_email["subject"] = fake_subject.replace(term, new_term)
+                                break
+                    
+                    # Adăugă simboluri de avertizare dacă nu există deja
+                    if not any(symbol in fake_subject for symbol in warning_symbol) and random.random() > 0.5:
+                        fake_email["subject"] = f"{random.choice(warning_symbol)} {fake_email['subject']}"
+                    
+                    # Înlocuiește datele în corpul emailului fals pentru a părea actual
+                    if "24h" in fake_email["body"]:
+                        hours = random.choice(["12h", "24h", "48h", "6h"])
+                        fake_email["body"] = fake_email["body"].replace("24h", hours)
+                    
+                    # Variază linkurile
+                    if "http://" in fake_email["body"]:
+                        domains = [
+                            "secure-verification.com", 
+                            "account-confirm.co", 
+                            "security-check.net", 
+                            "client-verification.info",
+                            "quick-verify.xyz"
+                        ]
+                        # Găsim și înlocuim un URL
+                        parts = fake_email["body"].split("http://")
+                        if len(parts) > 1:
+                            domain_parts = parts[1].split("/", 1)
+                            if domain_parts:
+                                new_domain = random.choice(domains)
+                                if len(domain_parts) > 1:
+                                    parts[1] = f"{new_domain}/{domain_parts[1]}"
+                                else:
+                                    parts[1] = f"{new_domain}"
+                                fake_email["body"] = "http://".join(parts)
+                    
+                    return real_email, fake_email
+                    
+                except Exception as e:
+                    # În caz de eșec, returnăm datele originale
+                    return example_data["real"], example_data["fake"]
             
-            # Pregătim lista cu cele două emailuri și amestecăm ordinea
-            emails = [
-                {"data": real_email, "is_phish": False},
-                {"data": fake_email, "is_phish": True}
-            ]
-            random.shuffle(emails)
+            # Generăm emailurile pentru exemplul curent
+            real_email, fake_email = generate_dynamic_emails(current_example["type"], current_example)
+            
+            # Decidem poziția emailului de phishing (alternată sau aleatoare)
+            if not st.session_state.phish_positions:
+                # Dacă lista e goală, generăm o secvență semi-aleatoare pentru toată sesiunea
+                # Asigurăm un echilibru între stânga și dreapta
+                positions = []
+                for i in range(len(examples) // 2):
+                    positions.extend([True, False])  # True = phishing pe stânga
+                random.shuffle(positions)
+                st.session_state.phish_positions = positions
+            
+            # Extragem poziția pentru exemplul curent și o eliminăm din listă
+            if st.session_state.phish_positions:
+                phishing_on_left = st.session_state.phish_positions.pop(0)
+            else:
+                # Fallback la aleatoriu dacă lista e goală
+                phishing_on_left = random.choice([True, False])
+            
+            # Pregătim lista cu cele două emailuri în funcție de poziția decidcă
+            if phishing_on_left:
+                emails = [
+                    {"data": fake_email, "is_phish": True},
+                    {"data": real_email, "is_phish": False}
+                ]
+            else:
+                emails = [
+                    {"data": real_email, "is_phish": False},
+                    {"data": fake_email, "is_phish": True}
+                ]
             
             # Salvăm emailurile în sesiune
             st.session_state.current_emails = emails
@@ -485,47 +605,106 @@ else:
             correct_idx = 0 if emails[0]["is_phish"] else 1
             st.info(f"Răspunsul corect era: Mesaj #{correct_idx + 1}")
             
-            # Evidențiem elementele de phishing
+            # Evidențiem elementele de phishing - identificare detaliată a semnelor
             phish_idx = 0 if emails[0]["is_phish"] else 1
             phish_email = emails[phish_idx]["data"]
             
-            st.subheader("Analiză detaliată a mesajului de phishing:")
+            st.subheader("Elemente de înșelătorie în mesajul phishing:")
             
+            # Colorăm diferit zonele suspecte din mesajul de phishing
+            phish_subject = phish_email["subject"]
+            phish_body = phish_email["body"]
+            
+            # Funcție pentru evidențierea elementelor suspecte
+            def highlight_suspicious(text, suspicious_elements):
+                highlighted = text
+                for element in suspicious_elements:
+                    if element.lower() in text.lower():
+                        # Căutăm elementul exact ținând cont de majuscule/minuscule
+                        start_idx = text.lower().find(element.lower())
+                        end_idx = start_idx + len(element)
+                        actual_text = text[start_idx:end_idx]
+                        highlighted = highlighted.replace(actual_text, f"<span style='color: red; font-weight: bold;'>{actual_text}</span>")
+                return highlighted
+            
+            # Elemente suspecte în subiect
+            subject_suspicious = ["URGENT", "ALERTĂ", "IMPORTANT", "imediat", "ACUM", "❗", "⚠️", "🚨"]
+            highlighted_subject = highlight_suspicious(phish_subject, subject_suspicious)
+            
+            # Elemente suspecte în corp
+            body_suspicious = [
+                "http://", "accesați:", "click aici", "link",
+                "parolă", "card", "cont", "autentificare", "verificare", 
+                "urgent", "imediat", "acum", "expiră", "pericol", "blocat", "suspendat", "șters",
+                "gratuit", "câștigat", "premiu", "taxă", "plătiți doar"
+            ]
+            highlighted_body = highlight_suspicious(phish_body, body_suspicious)
+            
+            # Afișăm versiunea evidențiată
+            st.markdown(f"""
+            <div style="border: 2px solid red; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <h4 style="color: red;">Subiect suspect:</h4>
+                <p>{highlighted_subject}</p>
+                
+                <h4 style="color: red;">Corp suspect:</h4>
+                <p style="white-space: pre-line;">{highlighted_body.replace('\\n', '<br>')}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Analiza detaliată și explicațiile
             col1, col2 = st.columns(2)
             with col1:
-                st.markdown("**Semne de phishing:**")
-                signs = []
+                st.markdown("**Ce să verifici:**")
                 
-                # Verificăm subiectul
-                subject = phish_email["subject"]
-                if "URGENT" in subject or "imediat" in subject.lower() or "acum" in subject.lower():
-                    signs.append("Ton de urgență în subiect")
+                # Analiză adaptată pentru fiecare tip de phishing
+                checks = []
                 
-                # Verificăm corpul
-                body = phish_email["body"]
-                if "http://" in body or "bit.ly" in body:
-                    signs.append("Link-uri suspecte")
+                # URL-uri suspecte
+                if "http://" in phish_body or "www." in phish_body:
+                    checks.append("**URL-uri suspecte** - Verifică întotdeauna adresa URL completă înainte de a face click. Nu te lăsa păcălit de domenii care imită branduri cunoscute.")
                 
-                if "card" in body.lower() or "parola" in body.lower() or "date" in body.lower():
-                    signs.append("Solicitare de date personale")
+                # Ton de urgență
+                if any(term.lower() in phish_subject.lower() or term.lower() in phish_body.lower() 
+                       for term in ["urgent", "imediat", "acum", "blocat", "pericol", "expiră"]):
+                    checks.append("**Presiune psihologică** - Mesajele legitime rareori creează panică sau urgență extremă.")
                 
-                if "urgent" in body.lower() or "imediat" in body.lower():
-                    signs.append("Presiune de timp")
+                # Solicitări de date personale
+                if any(term.lower() in phish_body.lower() 
+                       for term in ["parolă", "card", "cont", "autentificare", "verificare", "datele", "cod"]):
+                    checks.append("**Solicitare de date sensibile** - Instituțiile legitime nu cer parole sau date de card prin email.")
                 
-                if len(signs) == 0:
-                    signs.append("Verifică tonul general și contextul mesajului")
+                # Oferte prea bune
+                if any(term.lower() in phish_subject.lower() or term.lower() in phish_body.lower() 
+                       for term in ["gratuit", "câștigat", "premiu", "free", "cadou"]):
+                    checks.append("**Ofertă prea bună** - Ofertele nerealist de avantajoase sunt de obicei capcane.")
                 
-                for sign in signs:
-                    st.markdown(f"- {sign}")
+                # Adresă expeditor
+                if "@gmail.com" in phish_body or "@yahoo.com" in phish_body:
+                    checks.append("**Adresă de email suspectă** - Companiile folosesc emailuri corporative, nu servicii gratuite.")
+                
+                # Alte elemente tipice de înșelătorie
+                if "taxă" in phish_body.lower() or "plată" in phish_body.lower():
+                    checks.append("**Taxă de procesare** - Solicitarea unei taxe mici pentru a primi un premiu mare este o tactică comună de fraudă.")
+                
+                # Dacă nu am găsit elemente specifice, adăugăm sfaturi generale
+                if not checks:
+                    checks = [
+                        "**Verifică adresa expeditorului** - Asigură-te că domeniul aparține companiei legitime",
+                        "**Analizează limbajul** - Mesajele de phishing au adesea un ton diferit de comunicările oficiale",
+                        "**Verifică linkurile** - Plasează mouse-ul peste ele fără a da click pentru a vedea destinația reală"
+                    ]
+                
+                for check in checks:
+                    st.markdown(f"- {check}")
             
             with col2:
-                st.markdown("**Cum să verifici legitimitatea:**")
+                st.markdown("**Cum să te protejezi:**")
                 st.markdown("""
-                - Verifică adresa expeditorului
-                - Nu da click pe link-uri suspecte
-                - Contactează direct compania prin canalele oficiale
-                - Nu furniza date personale prin email
-                - Verifică greșelile gramaticale și tonul
+                - Contactează direct compania sau serviciul prin canalele oficiale
+                - Verifică independent linkurile și domeniul expeditorului
+                - Nu introduce date personale sau de autentificare ca răspuns la emailuri
+                - Activează autentificarea în doi factori unde este posibil
+                - Folosește un manager de parole pentru a evita reutilizarea acestora
                 """)
             
             # Buton pentru continuare
@@ -541,48 +720,74 @@ else:
 # Informații educaționale în partea de jos
 with st.expander("Sfaturi pentru detectarea phishing-ului"):
     st.markdown("""
-    ### Cum să recunoști un email de phishing:
+    ### 7 Metode pentru a identifica mesajele de phishing:
     
-    1. **Verifică adresa expeditorului** - Adresele de email care imită companii legitime adesea conțin greșeli sau domenii ciudate
-    2. **Fii atent la tonul urgent** - Mesajele care creează un sentiment de urgență sunt adesea phishing
-    3. **Verifică link-urile** - Plasează cursorul peste link (fără a da click) pentru a vedea URL-ul real
-    4. **Fii prudent cu atașamentele** - Nu deschide atașamente neașteptate
-    5. **Observă greșelile gramaticale** - Comunicările profesionale rareori conțin multe greșeli
-    6. **Verifică modul de adresare** - Mesajele generice ("Dragă client") pot fi suspecte
-    7. **Nu oferi informații personale** - Companiile legitime nu cer date sensibile prin email
+    1. **Verifică adresa expeditorului** - Nu te baza doar pe numele afișat. Verifică întregul domeniu (după @).
+    
+    2. **Analizează linkurile** - Plasează cursorul peste link pentru a vedea adresa reală. Link-urile legitime duc de obicei la domeniul oficial al companiei.
+    
+    3. **Fii atent la tonul urgent** - Mesajele care creează un sentiment de urgență ("acționează acum", "urgent", "cont blocat") sunt adesea înșelătorii.
+    
+    4. **Verifică greșelile** - Comunicările oficiale sunt de obicei verificate pentru greșeli gramaticale și de ortografie.
+    
+    5. **Nu oferi informații sensibile** - Companiile legitime nu cer niciodată parole, PIN-uri sau detalii complete de card prin email.
+    
+    6. **Evaluează ofertele** - Ofertele prea bune pentru a fi adevărate, câștiguri neașteptate, produse gratuite de valoare mare sunt adesea capcane.
+    
+    7. **Folosește verificarea independentă** - Dacă ai dubii, contactează direct compania prin site-ul oficial sau numărul de telefon cunoscut.
+    """)
+
+with st.expander("Exemple de escrocherii recente"):
+    st.markdown("""
+    ### Tactici actuale de phishing întâlnite frecvent:
+    
+    **Coșuri cadou false de sărbători**:
+    Escrocii promit coșuri cadou de la branduri cunoscute (Lindt, Ferrero, etc.) în schimbul completării unui chestionar. În realitate, aceștia colectează date personale sau solicită o "taxă de procesare" pentru premiul inexistent.
+    
+    **Vouchere false de la retaileri**:
+    Mesaje care oferă vouchere valoroase de la magazine populare (Kaufland, Lidl, etc.). Utilizatorii sunt direcționați către site-uri false unde li se cer date personale și de card.
+    
+    **Felicitări electronice periculoase**:
+    Emailuri care par a conține felicitări personalizate, dar care conțin link-uri către site-uri de phishing sau atașamente cu malware.
+    
+    **Falsificări de brand pentru cosmetice/produse populare**:
+    Imitații de campanii de la branduri cunoscute care oferă "giveaway-uri" sau mostre gratuite în schimbul unor "costuri de livrare" minime.
+    
+    **Notificări false despre pachete**:
+    Mesaje care pretind că un colet nu poate fi livrat din cauza unei adrese incomplete sau a unei taxe neplătite, solicitând date personale și de plată.
     """)
 
 with st.expander("Despre acest proiect"):
     st.markdown("""
-    Acest quiz educațional a fost creat pentru a ajuta utilizatorii să recunoască diverse tipuri de atacuri de phishing. 
+    Acest simulator de phishing a fost creat în scop educațional pentru a ajuta utilizatorii să recunoască diversele tipuri de înșelătorii digitale.
     
     Aplicația nu colectează, stochează sau procesează niciun fel de date personale.
     
-    Toate exemplele sunt create în scop educațional și nu reprezintă comunicări reale.
+    Toate exemplele sunt create pentru educare și nu reprezintă comunicări reale.
     
-    **Tipuri de phishing acoperite:**
+    **Tipuri de phishing incluse în simulator:**
     - Email-phishing clasic
     - Spear-phishing (phishing țintit)
     - Fraudă bancară
-    - Ofertă falsă
-    - Impersonare CEO
+    - Coș cadou Paște
+    - Vouchere și cupoane false
+    - Impersonare CEO (frauda "șefului")
     - Actualizare de securitate falsă
-    - Suport tehnic fals
-    - Notificare de livrare falsă
+    - Felicitare electronică falsă
+    - Fraudă cu suport tehnic
+    - Notificare livrare falsă
+    - Sondaj fals cu premii
     - Reînnoire abonament falsă
-    - Donație falsă
     - Oportunitate de investiții falsă
-    - Cupoane și discount-uri false
     - Confirmare comandă falsă
     - Probleme cont social media false
     - Verificare cont falsă
-    - Rambursare falsă (cerere de returnare a banilor)
     """)
     
     feedback = st.text_area("Feedback sau sugestii:")
     if st.button("Trimite feedback"):
-        st.success("Mulțumim pentru feedback! Vom lua în considerare sugestiile tale pentru versiunile viitoare.")
+        st.success("Mulțumim pentru feedback! Vom lua în considerare sugestiile tale pentru îmbunătățiri viitoare.")
 
 # Footer
 st.markdown("---")
-st.markdown("© 2025 Vaccin Anti-Phishing | Creat în scop educațional")
+st.markdown("© 2025 Simulator Anti-Phishing | Creat în scop educațional")
