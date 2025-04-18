@@ -180,13 +180,13 @@
     "explanation": "Fals: domeniu suspect, solicită multiple date sensibile, presiune extremă de timp, nu menționează numele serviciului. Real: domeniu oficial, link cu token securizat, perioadă rezonabilă, instrucțiuni în caz de eroare."
   },
   {
-    "type": "Refund fals",
+    "type": "Rambursare falsa",
     "real": {
       "subject": "Confirmare rambursare comandă #C45678",
       "body": "Stimate client,\n\nVă informăm că am procesat cererea dvs. de rambursare pentru comanda #C45678.\n\nSuma de 249,99 RON a fost returnată pe cardul folosit la achiziție și va fi vizibilă în contul dvs. în 3-5 zile lucrătoare.\n\nPentru detalii, accesați istoricul comenzilor din contul dvs. pe www.magazin-electronic.ro.\n\nMagazin Electronic"
     },
     "fake": {
-      "subject": "REFUND DISPONIBIL - 329,99 EUR Rambursare fiscală",
+      "subject": "RAMBURSARE DISPONIBILA - 329,99 EUR Rambursare fiscală",
       "body": "Stimate contribuabil,\n\nAvem plăcerea să vă informăm că aveți o RAMBURSARE FISCALĂ în valoare de 329,99 EUR disponibilă!\n\nPentru a primi suma, accesați: http://tax-refund-gov.eu și completați formularul cu datele dvs. bancare pentru transfer direct.\n\nRambursarea expiră în 48 ore!\n\nAdministrația Fiscală"
     },
     "explanation": "Fals: domeniu fals care imită o instituție guvernamentală, sumă mare nejustificată, presiune de timp, solicită date bancare. Real: referință la o comandă specifică, sumă exactă, informație despre procesul standard de rambursare."
