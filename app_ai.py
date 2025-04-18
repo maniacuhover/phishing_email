@@ -2,7 +2,7 @@ import streamlit as st
 import random
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Configurare pagină
 st.set_page_config(
@@ -55,162 +55,6 @@ def load_examples():
                     "body": "Stimat client,\n\nCardul dvs. va fi blocat în 24h din cauza unei activități suspecte.\nPentru verificare, accesați: http://banca-x.secureverify.com și introduceți datele cardului.\n\nDepartament Securitate"
                 },
                 "explanation": "Fals: domeniu fals (banca-x.secureverify.com), solicitare date card, ton de urgență."
-            },
-            {
-                "type": "Coș cadou Paște",
-                "real": {
-                    "subject": "Ofertă specială de Paște - Lindt Romania",
-                    "body": "Dragi clienți,\n\nCu ocazia sărbătorilor pascale, vă oferim reduceri de 15% la toate produsele noastre de ciocolată.\n\nVizitați magazinul nostru sau accesați www.lindt.ro/paste pentru a vedea ofertele.\n\nVă dorim Sărbători Fericite!\nEchipa Lindt România"
-                },
-                "fake": {
-                    "subject": "🐰 CADOU GRATUIT - Coș de Paște Lindt pentru tine!",
-                    "body": "Felicitări! Ai fost selectat să primești un coș de Paște Lindt GRATUIT!\n\nPentru a-ți revendica coșul cadou, completează chestionarul nostru scurt (30 de secunde) și plătește doar taxa de livrare 4,99 lei:\n\nhttp://lindt-easter-gift.com/claim\n\nOfertă valabilă doar azi!\nEchipa Promoții de Paște"
-                },
-                "explanation": "Fals: domeniu fals care imită brandul Lindt, ofertă prea bună pentru a fi adevărată (cadou 'gratuit' dar cere taxă), presiune de timp. Real: site oficial, reducere rezonabilă, nu solicită date personale."
-            },
-            {
-                "type": "Vouchere și cupoane",
-                "real": {
-                    "subject": "Voucher cadou pentru aniversarea colaborării noastre",
-                    "body": "Dragă client,\n\nCu ocazia aniversării a 3 ani de când ești clientul nostru, îți oferim un voucher în valoare de 50 RON.\n\nPoți folosi codul ANIV50 la următoarea comandă pe site-ul nostru www.magazin-oficial.ro până la data de 31.12.2023.\n\nEchipa Magazin Oficial"
-                },
-                "fake": {
-                    "subject": "IMPORTANT: Voucher KAUFLAND de 250 EUR - Sondaj Clienți",
-                    "body": "Stimați clienți Kaufland,\n\nSărbătorim 15 ani în România și oferim 100 vouchere de 250 EUR!\n\nPentru a obține voucher-ul, completează un scurt sondaj (2 minute) și introduceți datele dvs. pentru validare:\n\nhttp://kaufland-voucher.online/ro\n\nPrimii 100 de participanți vor primi voucherul direct pe email.\nEchipa Kaufland România"
-                },
-                "explanation": "Fals: domeniu suspect (.online), valoare nerealist de mare a voucherului, urgență (primii 100), solicită date personale. Real: ofertă realistă de valoare moderată, cod de voucher furnizat direct în email."
-            },
-            {
-                "type": "Impersonare CEO",
-                "real": {
-                    "subject": "Prezentarea trimestrială - feedback",
-                    "body": "Bună ziua tuturor,\n\nVă mulțumesc pentru participarea la prezentarea trimestrială de ieri.\n\nVă rog să trimiteți feedback-ul și sugestiile în formularul din intranet până vineri.\n\nCu stimă,\nAna Marinescu\nDirector General\nam@compania.ro"
-                },
-                "fake": {
-                    "subject": "Solicitare discretă - te rog răspunde imediat",
-                    "body": "Salut,\n\nMă aflu într-o întâlnire confidențială și nu pot vorbi la telefon. Avem nevoie urgent de niște carduri cadou Google Play pentru un client important.\n\nPoți să cumperi 5 carduri a câte 200 EUR și să-mi trimiți codurile pe WhatsApp la nr +40755123456? Voi aproba rambursarea astăzi.\n\nSunt presată de timp, te rog confirmă în 15 minute.\n\nMulțumesc,\nAna Marinescu\nDirector General\nana.marinescu.ceo@gmail.com"
-                },
-                "explanation": "Fals: adresă de email personală (gmail) în loc de domeniul companiei, solicitare urgentă de bani/carduri, cerere de comunicare pe alt canal, presiune extremă de timp. Real: adresă oficială de email, solicitare profesională normală."
-            },
-            {
-                "type": "Actualizare de securitate",
-                "real": {
-                    "subject": "Actualizare politică de securitate - acțiune necesară",
-                    "body": "Stimate utilizator,\n\nAm actualizat politica noastră de securitate.\n\nVă rugăm să vă autentificați în contul dvs. de pe site-ul nostru www.serviciu-web.ro și să revizuiți noii termeni din secțiunea 'Setări cont'.\n\nEchipa de Securitate\nServiceWeb"
-                },
-                "fake": {
-                    "subject": "⚠ ALERTA DE SECURITATE: Contul dvs. a fost COMPROMIS",
-                    "body": "URGENT - Acțiune Imediată Necesară!\n\nAm detectat o încercare de acces neautorizat la contul dvs!\n\nPentru a preveni pierderea accesului, trebuie să vă verificați contul în următoarele 2 ore accesând:\n\nhttp://account-security-verification.com/verify\n\nVeți avea nevoie de parola actuală și detaliile cardului de credit pentru verificare.\n\nEchipa de Securitate"
-                },
-                "explanation": "Fals: ton extrem de alarmist, domeniu generic, solicitare de informații sensibile (parolă și card), presiune extremă de timp. Real: ton profesional, trimitere către site-ul oficial, nu solicită date sensibile prin email."
-            },
-            {
-                "type": "Felicitare electronică falsă",
-                "real": {
-                    "subject": "O felicitare virtuală pentru tine",
-                    "body": "Dragă prieten,\n\nȚi-am trimis o felicitare virtuală pentru a sărbători prietenia noastră.\n\nO poți vizualiza accesând www.ecards-official.com/view/card/12345 - nu este necesară nicio înregistrare sau descărcare.\n\nCu drag,\nAndreea"
-                },
-                "fake": {
-                    "subject": "Cineva ți-a trimis o FELICITARE SPECIALĂ! 💌",
-                    "body": "Cineva special s-a gândit la tine!\n\nUn prieten ți-a trimis o felicitare personalizată. Pentru a o vedea, descarcă atașamentul sau accesează:\n\nhttp://special-ecards.co/view?id=12345\n\nNOTĂ: Felicitarea va expira în 24 de ore, grăbește-te să o vezi!\n\nEchipa Special E-Cards"
-                },
-                "explanation": "Fals: expeditor necunoscut, presiune de timp, solicitare de descărcare de atașamente, domeniu suspect (.co). Real: domeniu clar, fără presiune de timp, menționează explicit că nu este necesară descărcarea sau înregistrarea."
-            },
-            {
-                "type": "Fraudă cu suport tehnic",
-                "real": {
-                    "subject": "Confirmare ticket suport #12345",
-                    "body": "Bună ziua,\n\nAm înregistrat solicitarea dvs. cu numărul de ticket #12345.\n\nUn specialist va analiza problema și vă va contacta în maxim 24 de ore.\n\nPuteți urmări statusul ticket-ului pe portalul nostru de suport.\n\nEchipa de Suport Tehnic\nsupport@companie.ro"
-                },
-                "fake": {
-                    "subject": "⚠ ALERTĂ CRITICĂ: Virus detectat pe dispozitivul dvs",
-                    "body": "AVERTISMENT DE SECURITATE MICROSOFT!\n\nAm detectat activitate suspectă pe dispozitivul dvs. Virușii detectați:\n- Trojan.BTC-Miner\n- Spyware.KeyLogger\n\nDatele și conturile dvs. bancare sunt în PERICOL IMINENT!\n\nSunați ACUM la numărul dedicat: +40721000123 pentru asistență imediată, sau accesați:\nhttp://windows-security-center.tech\n\nNeintervenția în 3 ore poate duce la PIERDEREA TOTALĂ A DATELOR!\n\nEchipa de Securitate Microsoft"
-                },
-                "explanation": "Fals: ton extrem de alarmist, număr de telefon suspect, domeniu fals, presiune extremă de timp, exagerarea consecințelor. Real: ton profesional, referire la un număr de ticket specific."
-            },
-            {
-                "type": "Notificare livrare falsă",
-                "real": {
-                    "subject": "Comandă #A12345 - În curs de livrare",
-                    "body": "Bună ziua,\n\nComanda dvs. #A12345 a fost expediată și va fi livrată în data de 25.06.2023.\n\nPuteți urmări statusul folosind codul de tracking: RO123456789RO pe site-ul nostru www.fan-courier.ro.\n\nEchipa Livrări\nFan Courier"
-                },
-                "fake": {
-                    "subject": "⚠️ IMPORTANT: Coletul dvs. necesită confirmare de adresă",
-                    "body": "Stimate client,\n\nAvem un colet pentru dvs, dar livrarea a eșuat din cauza unei adrese incomplete.\n\nPentru a reprograma livrarea, vă rugăm să confirmați adresa folosind link-ul de mai jos:\n\nhttp://delivery-address-confirm.co/form\n\nVa trebui să plătiți o taxă de reprogramare de 3,99 lei cu cardul.\n\nDacă nu confirmați în 48h, coletul va fi returnat expeditorului.\n\nServiciul de Livrări"
-                },
-                "explanation": "Fals: nu specifică numele companiei de curierat, nu menționează nicio referință la comandă, solicită taxă de reprogramare, domeniu suspect, solicită date de card. Real: include număr de comandă și cod de tracking specific, trimite către site-ul oficial al companiei de curierat."
-            },
-            {
-                "type": "Sondaj fals cu premii",
-                "real": {
-                    "subject": "Invitație: Participă la studiul nostru anual de satisfacție",
-                    "body": "Dragă client,\n\nTe invităm să participi la studiul nostru anual privind satisfacția clienților. Completarea durează aproximativ 5 minute.\n\nParticipanții vor intra automat într-o tragere la sorți pentru un voucher de 300 RON.\n\nPoți accesa chestionarul pe site-ul nostru oficial: www.companie.ro/sondaj\n\nÎți mulțumim pentru feedback!\nEchipa de Relații Clienți"
-                },
-                "fake": {
-                    "subject": "🎁 FELICITĂRI! Ai fost selectat pentru premiul Samsung!",
-                    "body": "FELICITĂRI!\n\nDistozitivul tău a fost selectat aleatoriu pentru a câștiga un nou Samsung Galaxy S23 Ultra!\n\nPentru a revendica premiul, trebuie doar să participi la sondajul nostru scurt (3 întrebări) și să plătești taxa de procesare de doar 9,99 lei:\n\nhttp://samsung-winner-survey.com/claim\n\nAu mai rămas doar 2 telefoane! Grăbește-te!\n\nEchipa Promoții Samsung"
-                },
-                "explanation": "Fals: ofertă nerealistă, domeniu fals care imită brandul Samsung, urgență artificială ('doar 2 telefoane rămase'), solicită taxă pentru un premiu 'câștigat'. Real: ofertă rezonabilă, site oficial, explicație clară a procesului."
-            },
-            {
-                "type": "Reînnoire abonament",
-                "real": {
-                    "subject": "Abonamentul dvs. expiră în 7 zile",
-                    "body": "Stimate abonat,\n\nVă reamintim că abonamentul dvs. premium va expira pe data de 30.06.2023.\n\nPentru reînnoire, accesați contul dvs. pe www.serviciu-streaming.ro/cont și selectați opțiunea dorită.\n\nVă mulțumim că sunteți alături de noi!\n\nEchipa Serviciu Streaming"
-                },
-                "fake": {
-                    "subject": "⚠️ URGENT: Abonamentul dvs. Netflix a fost SUSPENDAT",
-                    "body": "Stimate client Netflix,\n\nAbonamentul dvs. a fost SUSPENDAT din cauza unei probleme de plată!\n\nPentru a evita pierderea permanentă a contului și a istoricului de vizionare, trebuie să actualizați URGENT informațiile de plată în următoarele 12 ore:\n\nhttp://netflix-account-billing.co/reactivate\n\nVă vom debita doar 1,99 EUR pentru verificare.\n\nEchipa de Facturare Netflix"
-                },
-                "explanation": "Fals: ton alarmist, domeniu fals (.co în loc de .com), solicitare de plată pentru 'verificare', presiune extremă de timp. Real: notificare cu mult timp înainte, trimitere către site-ul oficial, fără presiune sau amenințări."
-            },
-            {
-                "type": "Oportunitate de investiții",
-                "real": {
-                    "subject": "Invitație: Webinar despre strategii de investiții 2023",
-                    "body": "Stimată Doamnă/Stimate Domn,\n\nVă invităm să participați la webinarul nostru despre strategii de investiții pentru 2023, care va avea loc pe data de 15 iulie.\n\nPentru a vă înscrie și a afla mai multe detalii, vizitați: www.banca-investitii.ro/webinare\n\nParticiparea este gratuită pentru clienții noștri.\n\nBanca de Investiții"
-                },
-                "fake": {
-                    "subject": "🔐 CONFIDENȚIAL: Oportunitate unică de investiție - Randament 200%",
-                    "body": "Stimate investitor,\n\nVă contactez pentru a vă oferi acces la o oportunitate de investiție ULTRA-EXCLUSIVĂ disponibilă doar pentru 10 investitori selectați cu atenție.\n\nInvestiția oferă un randament GARANTAT de 200% în doar 4 luni prin tehnologia noastră avansată de tranzacționare crypto.\n\nPentru a vă rezerva locul, este necesară o investiție minimă de 5000 EUR prin transfer în contul nostru securizat: RO29CRYP12345678900\n\nRăspundeți în 24h sau sunați la: +40755987654\n\nPartenerul dvs. de investiții,\nDr. Alexandru Profit\nCrypto Investment Group"
-                },
-                "explanation": "Fals: randament nerealist de mare, presiune de timp, solicitare de transferuri directe, lipsă de detalii concrete despre investiție, tonul exclusivist și secretos. Real: invitație la un eveniment informativ, fără solicitare de bani, prezentarea clară a companiei."
-            },
-            {
-                "type": "Confirmare comandă falsă",
-                "real": {
-                    "subject": "Confirmare comandă #B78901 - Magazin Online",
-                    "body": "Mulțumim pentru comanda dvs.!\n\nComanda #B78901 a fost înregistrată cu succes.\nProduse comandate: Telefon Samsung Galaxy S23\nValoare totală: 3.299 RON\nData livrării estimate: 27.06.2023\n\nPentru detalii complete, accesați contul dvs. pe www.magazin-online.ro\n\nEchipa Magazin Online"
-                },
-                "fake": {
-                    "subject": "Comandă Apple confirmată #APL78432 - Acțiune necesară",
-                    "body": "Comandă Apple confirmată\nNr. comandă: APL78432\n\nProduse: MacBook Pro 16\" 2023\nValoare: 12,499 RON\n\nATENȚIE: Am detectat o problemă cu metoda dvs. de plată. Plata nu a putut fi procesată.\n\nPentru a evita anularea comenzii, actualizați urgent detaliile cardului:\n\nhttp://apple-order-payment.net/confirm\n\nComanda va fi anulată automat în 4 ore dacă problema nu este rezolvată.\n\nDepartamentul Comenzi Apple"
-                },
-                "explanation": "Fals: comandă pe care probabil nu ai făcut-o, valoare foarte mare, domeniu fals care imită Apple, presiune de timp, solicită actualizarea datelor cardului. Real: detalii specifice despre comandă, trimitere către site-ul oficial, nu solicită acțiune urgentă."
-            },
-            {
-                "type": "Probleme cont social media",
-                "real": {
-                    "subject": "Actualizare termeni și condiții Facebook",
-                    "body": "Bună ziua,\n\nVă informăm că am actualizat termenii și condițiile de utilizare.\n\nPuteți consulta noii termeni accesând secțiunea 'Setări cont' > 'Termeni și condiții' din contul dvs. sau vizitând www.facebook.com/terms.\n\nNu este necesară nicio acțiune pentru continuarea utilizării serviciilor noastre.\n\nEchipa Facebook"
-                },
-                "fake": {
-                    "subject": "⚠️ URGENT: Contul dvs. de Instagram va fi ȘTERS în 24h",
-                    "body": "AVERTISMENT FINAL\n\nContul dvs. de Instagram a fost raportat pentru încălcarea drepturilor de autor și a regulilor comunității!\n\nContul dvs. va fi ȘTERS PERMANENT în 24 de ore dacă nu contestați acuzațiile.\n\nPentru a verifica identitatea și a păstra contul, accesați:\n\nhttp://instagram-copyright-verify.com\n\nVa trebui să vă conectați cu numele de utilizator și parola pentru verificare.\n\nEchipa de Securitate Instagram"
-                },
-                "explanation": "Fals: ton foarte alarmist, amenințare cu ștergerea contului, domeniu fals, solicitare de date de autentificare. Real: ton profesional, trimitere către site-ul oficial, fără presiune sau amenințări."
-            },
-            {
-                "type": "Verificare cont",
-                "real": {
-                    "subject": "Confirmare adresă de email pentru contul nou",
-                    "body": "Bună ziua,\n\nPentru a finaliza înregistrarea contului dvs. pe platforma noastră, vă rugăm să confirmați adresa de email accesând link-ul de mai jos:\n\nhttps://www.platforma-servicii.ro/confirmare?token=abc123\n\nLink-ul este valabil 48 de ore.\n\nDacă nu ați solicitat crearea unui cont, ignorați acest email.\n\nEchipa Platformă Servicii"
-                },
-                "fake": {
-                    "subject": "⚠️ ACȚIUNE NECESARĂ: Verificare de securitate cont Google",
-                    "body": "Alertă de Securitate Google\n\nAm detectat o încercare de conectare neobișnuită la contul dvs. Google din Jakarta, Indonezia.\n\nDacă nu ați fost dvs., contul dvs. este în PERICOL IMINENT!\n\nVerificați-vă imediat contul și schimbați parola accesând:\n\nhttp://google-account-security.co/verify\n\nVeți avea nevoie de parola actuală și un nou cod de securitate care va fi trimis pe telefonul dvs.\n\nNeluarea de măsuri în 12 ore va duce la BLOCAREA CONTULUI.\n\nEchipa de Securitate Google"
-                },
-                "explanation": "Fals: ton alarmist, domeniu fals, solicitare de parolă actuală, crearea unui sentiment de panică prin menționarea unei locații îndepărtate, presiune de timp. Real: ton neutru, domeniu oficial, utilizarea unui token de securitate, explicație clară a pașilor următori."
             }
         ]
 
@@ -234,26 +78,21 @@ def format_email_html(email_data):
     """
     return html
 
-# Inițializare stare sesiune
-if "score" not in st.session_state:
-    st.session_state.score = 0
-if "total" not in st.session_state:
-    st.session_state.total = 0
-if "current_index" not in st.session_state:
-    st.session_state.current_index = 0
-if "start_time" not in st.session_state:
-    st.session_state.start_time = datetime.now()
-if "enhanced_ui" not in st.session_state:
-    st.session_state.enhanced_ui = True
-if "answered_types" not in st.session_state:
-    st.session_state.answered_types = {}
-if "quiz_complete" not in st.session_state:
-    st.session_state.quiz_complete = False
-if "current_emails" not in st.session_state:
-    st.session_state.current_emails = None
-if "phish_positions" not in st.session_state:
-    # Vom folosi această variabilă pentru a alterna poziția emailurilor de phishing
-    st.session_state.phish_positions = []
+# Inițializare stare sesiune - IMPORTANT: folosim o structură mai robustă pentru a urmări starea
+if "app_state" not in st.session_state:
+    st.session_state.app_state = {
+        "score": 0,
+        "total": 0,
+        "start_time": datetime.now(),
+        "enhanced_ui": True,
+        "answered_types": {},
+        "quiz_complete": False,
+        "current_example_index": None,
+        "current_emails": None,
+        "show_result": False,  # Flag pentru a afișa sau nu rezultatul
+        "need_new_example": True,  # Flag pentru a genera un nou exemplu
+        "phish_positions": []  # Lista pentru a alterna pozițiile de phishing
+    }
 
 # Încărcăm exemplele
 examples = load_examples()
@@ -268,47 +107,54 @@ Acest simulator te pregătește să recunoști diverse tipuri de înșelătorii 
 # Sidebar cu scor, statistici și setări
 with st.sidebar:
     st.header("Statistici și Setări")
-    st.metric("Scor curent", f"{st.session_state.score}/{st.session_state.total}")
-    if st.session_state.total > 0:
-        accuracy = (st.session_state.score / st.session_state.total) * 100
+    st.metric("Scor curent", f"{st.session_state.app_state['score']}/{st.session_state.app_state['total']}")
+    if st.session_state.app_state['total'] > 0:
+        accuracy = (st.session_state.app_state['score'] / st.session_state.app_state['total']) * 100
         st.progress(accuracy/100, f"Acuratețe: {accuracy:.1f}%")
     
-    elapsed_time = (datetime.now() - st.session_state.start_time).total_seconds()
+    elapsed_time = (datetime.now() - st.session_state.app_state['start_time']).total_seconds()
     minutes, seconds = divmod(int(elapsed_time), 60)
     st.info(f"Timp petrecut: {minutes}m {seconds}s")
     
     st.subheader("Progres")
     total_types = len(examples)
-    completed_types = len(st.session_state.answered_types)
+    completed_types = len(st.session_state.app_state['answered_types'])
     st.progress(completed_types/total_types, f"Progres: {completed_types}/{total_types} tipuri")
     
     st.subheader("Setări interfață")
-    enhanced_ui = st.toggle("Interfață îmbunătățită", value=st.session_state.enhanced_ui)
-    if enhanced_ui != st.session_state.enhanced_ui:
-        st.session_state.enhanced_ui = enhanced_ui
+    enhanced_ui = st.toggle("Interfață îmbunătățită", value=st.session_state.app_state['enhanced_ui'])
+    if enhanced_ui != st.session_state.app_state['enhanced_ui']:
+        st.session_state.app_state['enhanced_ui'] = enhanced_ui
     
+    # Buton pentru resetare
     if st.button("Resetează tot"):
-        st.session_state.score = 0
-        st.session_state.total = 0
-        st.session_state.current_index = 0
-        st.session_state.start_time = datetime.now()
-        st.session_state.answered_types = {}
-        st.session_state.quiz_complete = False
-        st.session_state.current_emails = None
-        st.session_state.phish_positions = []
+        # Resetăm complet starea aplicației
+        st.session_state.app_state = {
+            "score": 0,
+            "total": 0,
+            "start_time": datetime.now(),
+            "enhanced_ui": True,
+            "answered_types": {},
+            "quiz_complete": False,
+            "current_example_index": None,
+            "current_emails": None,
+            "show_result": False,
+            "need_new_example": True,
+            "phish_positions": []
+        }
         st.rerun()
 
 # Container principal
 main_container = st.container()
 
 # Verificăm dacă quiz-ul a fost completat
-if st.session_state.quiz_complete:
+if st.session_state.app_state['quiz_complete']:
     # Afișăm raportul final
     st.header("🎓 Raport Final - Antrenament Complet!")
     
     # Calculăm scorul total și procent
-    total_score = st.session_state.score
-    total_questions = st.session_state.total
+    total_score = st.session_state.app_state['score']
+    total_questions = st.session_state.app_state['total']
     if total_questions > 0:
         percent_correct = (total_score / total_questions) * 100
     else:
@@ -318,7 +164,7 @@ if st.session_state.quiz_complete:
     st.subheader(f"Scor final: {total_score}/{total_questions} ({percent_correct:.1f}%)")
     
     # Afișăm timpul petrecut
-    elapsed_time = (datetime.now() - st.session_state.start_time).total_seconds()
+    elapsed_time = (datetime.now() - st.session_state.app_state['start_time']).total_seconds()
     minutes, seconds = divmod(int(elapsed_time), 60)
     st.info(f"Timp total: {minutes} minute și {seconds} secunde")
     
@@ -327,7 +173,7 @@ if st.session_state.quiz_complete:
     
     # Creăm o listă de dicționare pentru afișare tabel
     results_data = []
-    for phish_type, result in st.session_state.answered_types.items():
+    for phish_type, result in st.session_state.app_state['answered_types'].items():
         results_data.append({
             "Tip de phishing": phish_type,
             "Răspuns corect": "✅" if result["correct"] else "❌",
@@ -339,14 +185,21 @@ if st.session_state.quiz_complete:
     
     # Buton pentru restart
     if st.button("Începe un nou test", use_container_width=True):
-        st.session_state.score = 0
-        st.session_state.total = 0
-        st.session_state.current_index = 0
-        st.session_state.start_time = datetime.now()
-        st.session_state.answered_types = {}
-        st.session_state.quiz_complete = False
-        st.session_state.current_emails = None
-        st.session_state.phish_positions = []
+        # Resetăm starea aplicației dar păstrăm preferințele UI
+        enhanced_ui = st.session_state.app_state['enhanced_ui']
+        st.session_state.app_state = {
+            "score": 0,
+            "total": 0,
+            "start_time": datetime.now(),
+            "enhanced_ui": enhanced_ui,
+            "answered_types": {},
+            "quiz_complete": False,
+            "current_example_index": None,
+            "current_emails": None,
+            "show_result": False,
+            "need_new_example": True,
+            "phish_positions": []
+        }
         st.rerun()
         
     # Sfaturi finale
@@ -392,42 +245,43 @@ if st.session_state.quiz_complete:
 else:
     # Quiz în desfășurare
     with main_container:
-        # Verificăm dacă am parcurs toate tipurile sau dacă nu avem emailuri curente
-        if st.session_state.current_index >= len(examples) or st.session_state.current_emails is None:
-            if len(st.session_state.answered_types) >= len(examples):
+        # GENERARE NOUĂ - verificăm dacă avem nevoie de un nou exemplu
+        if st.session_state.app_state['need_new_example']:
+            # Verificăm dacă am parcurs toate tipurile
+            if len(st.session_state.app_state['answered_types']) >= len(examples):
                 # Am completat toate tipurile de phishing
-                st.session_state.quiz_complete = True
+                st.session_state.app_state['quiz_complete'] = True
                 st.rerun()
-            
+                
             # Alegem un exemplu care nu a fost încă rezolvat
-            remaining_types = [i for i in range(len(examples)) if examples[i]["type"] not in st.session_state.answered_types]
-            if remaining_types:
-                st.session_state.current_index = random.choice(remaining_types)
-            else:
+            remaining_indices = [i for i in range(len(examples)) 
+                               if examples[i]["type"] not in st.session_state.app_state['answered_types']]
+            
+            if not remaining_indices:
                 # Dacă am răspuns la toate, marcăm quiz-ul ca fiind complet
-                st.session_state.quiz_complete = True
+                st.session_state.app_state['quiz_complete'] = True
                 st.rerun()
             
-            # Obținem exemple pentru tipul curent
-            current_example = examples[st.session_state.current_index]
+            # Alegem aleatoriu un exemplu din cele rămase
+            current_index = random.choice(remaining_indices)
+            st.session_state.app_state['current_example_index'] = current_index
+            
+            # Obținem exemplul curent
+            current_example = examples[current_index]
             
             # Funcție pentru a genera emailuri în mod dinamic
             def generate_dynamic_emails(example_type, example_data):
                 """
-                Generează emailuri dinamice bazate pe șabloane sau AI
+                Generează emailuri dinamice bazate pe șabloane
                 """
                 try:
-                    # Opțional, încearcă să folosești AI dacă este disponibil
-                    # Încearcă să folosești OpenAI (nu-l vom implementa aici pentru că necesită chei API)
-                    # În cazul eșecului, folosește datele locale
-                    
                     # Simulăm diverse variații
                     real_email = example_data["real"].copy()
                     fake_email = example_data["fake"].copy()
                     
                     # Adăugăm variații aleatorii pentru a face emailurile mai realiste
                     current_date = datetime.now().strftime("%d.%m.%Y")
-                    tomorrow = (datetime.now() + datetime.timedelta(days=1)).strftime("%d.%m.%Y")
+                    tomorrow = (datetime.now() + timedelta(days=1)).strftime("%d.%m.%Y")
                     
                     # Variații pentru emailul real
                     if "data" in real_email["body"]:
@@ -490,18 +344,18 @@ else:
             real_email, fake_email = generate_dynamic_emails(current_example["type"], current_example)
             
             # Decidem poziția emailului de phishing (alternată sau aleatoare)
-            if not st.session_state.phish_positions:
+            if not st.session_state.app_state['phish_positions']:
                 # Dacă lista e goală, generăm o secvență semi-aleatoare pentru toată sesiunea
                 # Asigurăm un echilibru între stânga și dreapta
                 positions = []
                 for i in range(len(examples) // 2):
                     positions.extend([True, False])  # True = phishing pe stânga
                 random.shuffle(positions)
-                st.session_state.phish_positions = positions
+                st.session_state.app_state['phish_positions'] = positions
             
-            # Extragem poziția pentru exemplul curent și o eliminăm din listă
-            if st.session_state.phish_positions:
-                phishing_on_left = st.session_state.phish_positions.pop(0)
+            # Extragem poziția pentru exemplul curent
+            if st.session_state.app_state['phish_positions']:
+                phishing_on_left = st.session_state.app_state['phish_positions'].pop(0)
             else:
                 # Fallback la aleatoriu dacă lista e goală
                 phishing_on_left = random.choice([True, False])
@@ -519,13 +373,16 @@ else:
                 ]
             
             # Salvăm emailurile în sesiune
-            st.session_state.current_emails = emails
+            st.session_state.app_state['current_emails'] = emails
+            st.session_state.app_state['need_new_example'] = False
+            st.session_state.app_state['show_result'] = False
         
-        # Obținem exemplul curent
-        current_example = examples[st.session_state.current_index]
-        emails = st.session_state.current_emails
+        # Obținem exemplul și emailurile curente din starea sesiunii
+        current_index = st.session_state.app_state['current_example_index']
+        current_example = examples[current_index]
+        emails = st.session_state.app_state['current_emails']
         
-        # Afișăm tipul de phishing și explicația
+        # Afișăm tipul de phishing
         st.header(f"Tip: {current_example['type']}")
         
         # Afișăm emailurile
@@ -533,7 +390,7 @@ else:
         
         with col1:
             st.subheader("Mesaj #1")
-            if st.session_state.enhanced_ui:
+            if st.session_state.app_state['enhanced_ui']:
                 # Afișăm emailul în format HTML îmbunătățit
                 email_html = format_email_html(emails[0]["data"])
                 st.markdown(email_html, unsafe_allow_html=True)
@@ -556,7 +413,7 @@ else:
         
         with col2:
             st.subheader("Mesaj #2")
-            if st.session_state.enhanced_ui:
+            if st.session_state.app_state['enhanced_ui']:
                 # Afișăm emailul în format HTML îmbunătățit
                 email_html = format_email_html(emails[1]["data"])
                 st.markdown(email_html, unsafe_allow_html=True)
@@ -577,26 +434,39 @@ else:
                     disabled=True
                 )
         
-        # Secțiunea de decizie
-        choice = st.radio("Care dintre mesaje crezi că este phishing?", ["Mesaj #1", "Mesaj #2"])
-        idx = 0 if choice == "Mesaj #1" else 1
+        # Dacă nu am afișat încă rezultatul, arătăm butoanele de selecție
+        if not st.session_state.app_state['show_result']:
+            # Secțiunea de decizie
+            choice = st.radio("Care dintre mesaje crezi că este phishing?", ["Mesaj #1", "Mesaj #2"])
+            idx = 0 if choice == "Mesaj #1" else 1
+            
+            # Verificare răspuns
+            if st.button("Verifică răspunsul", use_container_width=True):
+                st.session_state.app_state['total'] += 1
+                correct = emails[idx]["is_phish"]
+                
+                if correct:
+                    st.session_state.app_state['score'] += 1
+                
+                # Adăugăm tipul curent în lista de tipuri la care s-a răspuns
+                st.session_state.app_state['answered_types'][current_example["type"]] = {
+                    "correct": correct,
+                    "explanation": current_example["explanation"]
+                }
+                
+                # Setăm flag-ul pentru afișarea rezultatului
+                st.session_state.app_state['show_result'] = True
+                st.rerun()  # Reîncărcăm pentru a afișa rezultatul
         
-        # Verificare răspuns
-        if st.button("Verifică răspunsul", use_container_width=True):
-            st.session_state.total += 1
-            correct = emails[idx]["is_phish"]
+        # Afișăm rezultatul dacă flag-ul este setat
+        if st.session_state.app_state['show_result']:
+            # Verificăm dacă răspunsul a fost corect
+            correct = st.session_state.app_state['answered_types'][current_example["type"]]["correct"]
             
             if correct:
-                st.session_state.score += 1
                 st.success("✅ Corect! Ai identificat corect mesajul de phishing.")
             else:
                 st.error("❌ Greșit! Acesta nu era mesajul de phishing.")
-            
-            # Adăugăm tipul curent în lista de tipuri la care s-a răspuns
-            st.session_state.answered_types[current_example["type"]] = {
-                "correct": correct,
-                "explanation": current_example["explanation"]
-            }
             
             # Afișăm explicația
             st.markdown(f"**Explicație:** {current_example['explanation']}")
@@ -709,12 +579,9 @@ else:
             
             # Buton pentru continuare
             if st.button("Continuă la următorul exemplu", use_container_width=True):
-                # Dacă am răspuns la toate tipurile
-                if len(st.session_state.answered_types) >= len(examples):
-                    st.session_state.quiz_complete = True
-                else:
-                    # Ștergem emailurile curente pentru a genera altele la următoarea iterație
-                    st.session_state.current_emails = None
+                # Resetăm flag-urile pentru a genera un nou exemplu
+                st.session_state.app_state['need_new_example'] = True
+                st.session_state.app_state['show_result'] = False
                 st.rerun()
 
 # Informații educaționale în partea de jos
