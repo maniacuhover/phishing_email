@@ -406,23 +406,7 @@ else:
                 components.html(
                     format_email_html(email), 
                     height=height, 
-                    scrolling=True,
-                    # Adaugă acest script pentru a detecta dimensiunea ecranului și a ajusta după nevoie
-                    wrapper_html="""
-                    <div style="overflow: auto; width: 100%;">
-                        <script>
-                            function adjustHeight() {
-                                const iframe = document.querySelector('iframe');
-                                if (window.innerWidth < 768) {
-                                    iframe.style.height = 'calc(100vh - 200px)';
-                                }
-                            }
-                            window.addEventListener('resize', adjustHeight);
-                            adjustHeight();
-                        </script>
-                        {0}
-                    </div>
-                    """
+                    scrolling=True
                 )
             else:
                 st.text_area("Subiect:", email['subject'], height=50, disabled=True)
