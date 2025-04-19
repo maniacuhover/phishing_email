@@ -62,7 +62,7 @@ def analyze_phishing_email(email_data, email_type):
     
     if any(pattern in body for pattern in sensitive_patterns):
         indicators.append({
-            "tip": "Solicitare de inf
+            "tip": "Solicitare de informatii"
 def load_examples():
     try:
         with open("examples.json", "r", encoding="utf-8") as f:
