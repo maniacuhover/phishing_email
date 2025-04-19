@@ -374,7 +374,7 @@ else:
         real = {
         "subject": current["real"]["subject"], 
         "body": current["real"]["body"],
-        "logo": "Magazin Online",  # Logo pentru emailul legitim
+        "logo": "",  # Logo pentru emailul legitim
         "colors": "#007bff",       # Culoare albastru pentru legitim
         "sender": "Magazin Online",
         "sender_email": "info@magazin-online.ro",
@@ -384,7 +384,7 @@ else:
         fake = {
             "subject": current["fake"]["subject"], 
             "body": current["fake"]["body"],
-            "logo": "MagazinOnline",   # Subtil diferit (fără spațiu) pentru phishing
+            "logo": "",   # Subtil diferit (fără spațiu) pentru phishing
             "colors": "#e74c3c",        # Culoare roșie pentru phishing
             "sender": "Magazin Online", 
             "sender_email": "info@magazin-online.info", # domeniu subtil diferit
