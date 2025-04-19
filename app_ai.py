@@ -541,21 +541,95 @@ else:
 # Educational sections
 with st.expander("Sfaturi detectare phishing"):
     st.markdown("""
-- Verifică expeditorul
-- Analizează link-urile
-- Atenție la tonul de urgență
-- Nu furniza date sensibile
-- Activează 2FA
-""")
+    ### Ghid complet pentru detectarea emailurilor de phishing:
+    
+    #### 1. Verifică expeditorul 📧
+    * Analizează adresa de email completă, nu doar numele afișat
+    * Verifică pentru greșeli subtile (de ex., amazon-secure.com în loc de amazon.com)
+    * Observă domeniile neobișnuite (.xyz, .info, .online în loc de .com, .ro, .org)
+    
+    #### 2. Analizează link-urile 🔍
+    * Trecerea cursorului peste link-uri îți permite să vezi URL-ul real
+    * Evită să dai click pe URL-uri scurte (bit.ly, tinyurl, etc.)
+    * Accesează site-urile oficiale scriind manual adresa în browser, nu prin link-uri
+    * Verifică prezența HTTPS și a certificatului de securitate
+    
+    #### 3. Atenție la tonul de urgență ⚠️
+    * Emailurile de phishing creează un sentiment de panică sau urgență
+    * Frazele precum "acționează acum", "urgent", "contul va fi suspendat" sunt alarmante
+    * Deciziile luate sub presiune sunt adesea greșite - ia-ți timp să verifici
+    
+    #### 4. Nu furniza date sensibile 🔒
+    * Instituțiile legitime nu solicită niciodată parole sau date de card pe email
+    * Nu descărca atașamente neașteptate - pot conține malware
+    * Dacă se cere autentificare, mergi direct pe site-ul oficial
+    
+    #### 5. Activează securitatea suplimentară 🛡️
+    * Folosește autentificarea în doi factori (2FA) pentru toate conturile importante
+    * Utilizează parole unice pentru fiecare cont și un manager de parole
+    * Menține software-ul actualizat pentru a te proteja de vulnerabilități
+    
+    #### 6. Verifică greșelile gramaticale și de formatare 📝
+    * Emailurile de phishing conțin adesea greșeli gramaticale sau de formatare
+    * Calitatea slabă a imaginilor sau logo-uri deformate pot indica un email fals
+    * Inconsistențele în formatare sau fonturi diferite în același email sunt suspecte
+    """)
+
 with st.expander("Exemple recente"):
     st.markdown("""
-- Coșuri cadou false
-- Vouchere false
-- Felicitări cu malware
-- Notificări false de livrare
-""")
-with st.expander("Despre proiect"):
-    st.markdown("Educațional; exemple fictive.")
+    ### Tactici recente de phishing (2025):
+    
+    #### 📱 Phishing prin QR code
+    * Emailuri false de livrare cu coduri QR care te duc pe site-uri malițioase
+    * Oferte care necesită scanarea unui cod QR pentru "verificarea identității"
+    
+    #### 🤖 Deepfake și AI phishing
+    * Emailuri ce imită perfect stilul de comunicare al colegilor sau șefilor
+    * Mesaje generate cu AI care par foarte credibile și personalizate
+    
+    #### 📄 Documente colaborative false
+    * Invitații false pentru documente Google Workspace sau Microsoft Office
+    * Solicitări de colaborare care cer reautentificare sau descărcarea de "actualizări"
+    
+    #### ☁️ Cloud storage phishing
+    * Notificări false despre depășirea spațiului de stocare în cloud
+    * Alerte de securitate false care solicită resetarea parolei
+    
+    #### 🏦 Phishing bancar sofisticat
+    * Copii aproape perfecte ale site-urilor bancare legitime
+    * Notificări false de tranzacții suspecte ce solicită verificare imediată
+    
+    #### 📊 Atacuri de spear-phishing corporative
+    * Emailuri care imită platforme de colaborare precum Teams sau Slack
+    * Mesaje care par a fi de la departamentul IT solicitând actualizări de securitate
+    """)with st.expander("Despre proiect"):
+    st.markdown("""
+    ### Despre Simulatorul Anti-Phishing
+    
+    **Simulatorul Anti-Phishing** este o platformă educațională interactivă concepută pentru a îmbunătăți abilitățile utilizatorilor de a identifica și evita atacurile de phishing.
+    
+    #### Obiective educaționale:
+    * Creșterea gradului de conștientizare privind amenințările cibernetice
+    * Dezvoltarea abilităților practice de identificare a emailurilor de phishing
+    * Formarea de reflexe digitale sănătoase pentru o navigare sigură online
+    
+    #### Caracteristici:
+    * Exemple realiste bazate pe tehnici moderne de phishing
+    * Analiză detaliată a indicatorilor de risc
+    * Feedback personalizat și recomandări de îmbunătățire
+    * Interfață intuitivă și responsivă
+    
+    #### Date tehnice:
+    * Versiune: 2.1.0
+    * Dezvoltat cu: Python, Streamlit
+    * Toate exemplele sunt create în scop educațional
+    * Actualizat: Aprilie 2025
+    
+    #### Mențiuni legale:
+    Toate exemplele de phishing prezentate sunt fictive și create exclusiv în scop educațional. Orice asemănare cu emailuri reale este întâmplătoare. Acest simulator nu colectează date personale și nu încurajează practicarea atacurilor de phishing.
+    
+    © 2025 Simulatorul Anti-Phishing | Codul sursă disponibil sub licență GNU GPL-3.0
+    """)
 
 # Footer
 st.markdown("---")
