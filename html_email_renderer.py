@@ -13,7 +13,7 @@ def render_html_email(email_data):
     sender_name = email_data.get("sender", "Expeditor")
     sender_email = email_data.get("sender_email", "expeditor@domain.com")
     subject = email_data.get("subject", "Subiect email")
-    body = email_data.get("body", "").replace("\n", "<br>")
+    body = email_data.get("body", "").replace("\n", "<br>") if "<br>" not in email_data.get("body", "") else email_data.get("body", "")
     date = email_data.get("date", "01.01.2025")
     footer = email_data.get("footer", "© 2025 Companie")
     
@@ -51,7 +51,7 @@ def render_html_email(email_data):
         </div>
     """
     
-    # Construim corpul emailului
+    # Construim corpul emailului cu suport pentru HTML
     body_html = f"""
         <!-- Email body -->
         <div style="padding: 15px; line-height: 1.5;">
@@ -66,6 +66,36 @@ def render_html_email(email_data):
             {footer}
         </div>
     </div>
+    
+    <!-- Overlay tooltip JS -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const highlights = document.querySelectorAll('[title]');
+        highlights.forEach(el => {
+            el.style.position = 'relative';
+            el.addEventListener('mouseover', function() {
+                const tooltip = document.createElement('div');
+                tooltip.innerText = this.getAttribute('title');
+                tooltip.style.position = 'absolute';
+                tooltip.style.bottom = '100%';
+                tooltip.style.left = '0';
+                tooltip.style.backgroundColor = '#333';
+                tooltip.style.color = 'white';
+                tooltip.style.padding = '5px 10px';
+                tooltip.style.borderRadius = '4px';
+                tooltip.style.fontSize = '12px';
+                tooltip.style.zIndex = '1000';
+                tooltip.style.whiteSpace = 'nowrap';
+                this.appendChild(tooltip);
+            });
+            
+            el.addEventListener('mouseout', function() {
+                const tooltip = this.querySelector('div');
+                if (tooltip) tooltip.remove();
+            });
+        });
+    });
+    </script>
     """
     
     # Combinăm toate componentele
