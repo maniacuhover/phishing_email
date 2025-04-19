@@ -31,7 +31,7 @@ defaults = {
     "quiz_complete": False,
     "current_emails": None,
     "phish_positions": [],
-    "just_verified": False
+    "just_verified": False,  # Adaugă virgulă aici
     "detailed_explanations": True,  # Nou: activează explicații detaliate
     "show_indicators": False,  # Nou: arată indicatorii de phishing
     "current_analysis": None  # Nou: stochează analiza curentă
