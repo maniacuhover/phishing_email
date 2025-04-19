@@ -29,7 +29,7 @@ def analyze_phishing_email(email_data, email_type):
             "detalii": "Emailurile frauduloase folosesc adesea un ton de urgență pentru a te determina să acționezi impulsiv.",
             "exemplu": email_data.get("subject"),
             "risc": "ridicat"
-        })
+        })  # Asigură-te că această paranteză este închisă
     
     # Analizarea corpului
     body = email_data.get("body", "").lower()
@@ -53,7 +53,7 @@ def analyze_phishing_email(email_data, email_type):
                 "detalii": "Link-ul poate fi fraudulos: " + ", ".join(reasons),
                 "exemplu": url,
                 "risc": "ridicat"
-            })
+            })  # Asigură-te că această paranteză este închisă
     
     # Verificarea solicitărilor de informații sensibile
     sensitive_patterns = [
@@ -62,14 +62,17 @@ def analyze_phishing_email(email_data, email_type):
     
     if any(pattern in body for pattern in sensitive_patterns):
         indicators.append({
-            "tip": "Solicitare de informatii"
-def load_examples():
-    try:
-        with open("examples.json", "r", encoding="utf-8") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return []
-def highlight_phishing_indicators(email_text, indicators):
+            "tip": "Solicitare de informații sensibile",
+            "detalii": "Emailul cere date confidențiale. Companiile legitime nu solicită niciodată informații sensibile prin email.",
+            "exemplu": "Mesajul conține termeni ce sugerează solicitarea de date confidențiale.",
+            "risc": "ridicat"
+        })  # Asigură-te că această paranteză este închisă
+    
+    return {
+        "indicators": indicators,
+        "total_risk_score": len(indicators),
+        "primary_risk": next((ind["tip"] for ind in indicators if ind["risc"] == "ridicat"), "Risc scăzut")
+    }  # Asigură-te că această paranteză este închisădef highlight_phishing_indicators(email_text, indicators):
     """
     Evidențiază indicatori de phishing în textul emailului
     
