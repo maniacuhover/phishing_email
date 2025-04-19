@@ -137,7 +137,7 @@ def format_email_html(email_data):
     Returns:
         str: Reprezentarea HTML a emailului
     """
-    company_logo = email_data.get("logo", "COMPANIE")
+    company_logo = email_data.get("logo", "")
     company_color = email_data.get("colors", "#007bff")
     sender_name = email_data.get("sender", "Expeditor")
     sender_email = email_data.get("sender_email", "expeditor@domain.com")
