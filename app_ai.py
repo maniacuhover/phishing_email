@@ -6,6 +6,25 @@ import random
 
 # Ensure this is the first Streamlit call
 st.set_page_config(page_title="Vaccin Anti-Phishing", page_icon="🛡️", layout="wide")
+# La începutul aplicației, după st.set_page_config
+st.markdown("""
+<style>
+    @media (max-width: 768px) {
+        .stHorizontalBlock {
+            flex-direction: column;
+        }
+        .stHorizontalBlock > div {
+            width: 100% !important;
+        }
+        /* Ajustează spațierea pentru mobile */
+        .block-container {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
+
 
 # Load examples from JSON file
 @st.cache_data
@@ -137,7 +156,7 @@ def format_email_html(email_data):
     Returns:
         str: Reprezentarea HTML a emailului
     """
-    company_logo = email_data.get("logo", "")
+    company_logo = email_data.get("logo", "COMPANIE")
     company_color = email_data.get("colors", "#007bff")
     sender_name = email_data.get("sender", "Expeditor")
     sender_email = email_data.get("sender_email", "expeditor@domain.com")
@@ -146,12 +165,45 @@ def format_email_html(email_data):
     date = email_data.get("date", "01.01.2025")
     footer = email_data.get("footer", "© 2025 Companie")
     
-    # Construim headerul emailului în stil realist
+    # Construim headerul emailului în stil realist cu design responsiv
     header_html = f"""
-    <div style="border: 1px solid #ddd; border-radius: 8px; max-width: 100%; font-family: Arial, sans-serif; margin-bottom: 20px;">
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            @media screen and (max-width: 600px) {{
+                .email-container {{
+                    width: 100% !important;
+                    padding: 0 !important;
+                }}
+                .email-header {{
+                    padding: 10px !important;
+                }}
+                .email-content {{
+                    padding: 10px !important;
+                }}
+                .email-footer {{
+                    padding: 10px !important;
+                    font-size: 10px !important;
+                }}
+                .email-meta td {{
+                    display: block;
+                    width: 100%;
+                }}
+                .email-meta td:first-child {{
+                    font-weight: bold;
+                    padding-bottom: 2px;
+                }}
+            }}
+        </style>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
+    <div class="email-container" style="border: 1px solid #ddd; border-radius: 8px; max-width: 100%; margin-bottom: 20px;">
         <!-- Header -->
-        <div style="background-color: {company_color}; color: white; padding: 15px; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-            <table width="100%">
+        <div class="email-header" style="background-color: {company_color}; color: white; padding: 15px; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                     <td><h2 style="margin: 0;">{company_logo}</h2></td>
                     <td align="right" style="font-size: 12px;">
@@ -163,7 +215,7 @@ def format_email_html(email_data):
         
         <!-- Email metadata -->
         <div style="background-color: #f8f9fa; padding: 10px 15px; border-bottom: 1px solid #ddd;">
-            <table width="100%" style="font-size: 13px;">
+            <table class="email-meta" width="100%" style="font-size: 13px;" cellpadding="3" cellspacing="0" border="0">
                 <tr>
                     <td width="60"><strong>De la:</strong></td>
                     <td>{sender_name} &lt;{sender_email}&gt;</td>
@@ -180,10 +232,10 @@ def format_email_html(email_data):
         </div>
     """
     
-    # Construim corpul emailului
+    # Construim corpul emailului cu suport pentru design responsiv
     body_html = f"""
         <!-- Email body -->
-        <div style="padding: 15px; line-height: 1.5;">
+        <div class="email-content" style="padding: 15px; line-height: 1.5;">
             {body}
         </div>
     """
@@ -191,10 +243,12 @@ def format_email_html(email_data):
     # Construim footerul emailului
     footer_html = f"""
         <!-- Footer -->
-        <div style="background-color: #f8f9fa; padding: 10px 15px; font-size: 11px; color: #6c757d; border-top: 1px solid #ddd; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+        <div class="email-footer" style="background-color: #f8f9fa; padding: 10px 15px; font-size: 11px; color: #6c757d; border-top: 1px solid #ddd; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
             {footer}
         </div>
     </div>
+    </body>
+    </html>
     """
     
     # Combinăm toate componentele
@@ -343,10 +397,33 @@ else:
     for i, (email, _) in enumerate(pair):
         with (col1 if i == 0 else col2):
             st.subheader(f"Mesaj #{i+1}")
+            # Modifică secțiunea unde afișezi emailurile cu components.html:
             if st.session_state.enhanced_ui:
                 lines = email['body'].count("\n") + 5
                 height = min(600, 100 + lines * 30)
-                components.html(format_email_html(email), height=height, scrolling=True)
+                
+                # Adaugă o clasă diferită pentru mobile vs desktop
+                components.html(
+                    format_email_html(email), 
+                    height=height, 
+                    scrolling=True,
+                    # Adaugă acest script pentru a detecta dimensiunea ecranului și a ajusta după nevoie
+                    wrapper_html="""
+                    <div style="overflow: auto; width: 100%;">
+                        <script>
+                            function adjustHeight() {
+                                const iframe = document.querySelector('iframe');
+                                if (window.innerWidth < 768) {
+                                    iframe.style.height = 'calc(100vh - 200px)';
+                                }
+                            }
+                            window.addEventListener('resize', adjustHeight);
+                            adjustHeight();
+                        </script>
+                        {0}
+                    </div>
+                    """
+                )
             else:
                 st.text_area("Subiect:", email['subject'], height=50, disabled=True)
                 st.text_area("", email['body'], height=200, disabled=True)
