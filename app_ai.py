@@ -371,8 +371,25 @@ else:
         current = examples[idx]
 
         # Build email dicts
-        real = {"subject": current["real"]["subject"], "body": current["real"]["body"]}
-        fake = {"subject": current["fake"]["subject"], "body": current["fake"]["body"]}
+        real = {
+        "subject": current["real"]["subject"], 
+        "body": current["real"]["body"],
+        "logo": "Magazin Online",  # Logo pentru emailul legitim
+        "colors": "#007bff",       # Culoare albastru pentru legitim
+        "sender": "Magazin Online",
+        "sender_email": "info@magazin-online.ro",
+        "footer": "© 2025 Magazin Online | Toate drepturile rezervate"
+        }
+        
+        fake = {
+            "subject": current["fake"]["subject"], 
+            "body": current["fake"]["body"],
+            "logo": "MagazinOnline",   # Subtil diferit (fără spațiu) pentru phishing
+            "colors": "#e74c3c",        # Culoare roșie pentru phishing
+            "sender": "Magazin Online", 
+            "sender_email": "info@magazin-online.info", # domeniu subtil diferit
+            "footer": "© 2025 Serviciul Clienți"  # Footer diferit pentru phishing
+        }
 
         # Alternate phishing position
         if not st.session_state.phish_positions:
