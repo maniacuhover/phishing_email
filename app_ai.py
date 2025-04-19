@@ -8,7 +8,7 @@ import random
 st.set_page_config(page_title="Vaccin Anti-Phishing", page_icon="🛡️", layout="wide")
 
 # HTML renderer import
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from html_email_renderer import render_html_email as format_email_html
 from phishing_analyzer import analyze_phishing_email
 from text_highlighter import highlight_phishing_indicators
