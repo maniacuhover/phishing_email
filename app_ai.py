@@ -602,7 +602,8 @@ with st.expander("Exemple recente"):
     #### 📊 Atacuri de spear-phishing corporative
     * Emailuri care imită platforme de colaborare precum Teams sau Slack
     * Mesaje care par a fi de la departamentul IT solicitând actualizări de securitate
-    """)with st.expander("Despre proiect"):
+    """)
+    with st.expander("Despre proiect"):
     st.markdown("""
     ### Despre Simulatorul Anti-Phishing
     
