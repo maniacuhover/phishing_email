@@ -603,7 +603,8 @@ with st.expander("Exemple recente"):
     * Emailuri care imită platforme de colaborare precum Teams sau Slack
     * Mesaje care par a fi de la departamentul IT solicitând actualizări de securitate
     """)
-    with st.expander("Despre proiect"):
+
+with st.expander("Despre proiect"):
     st.markdown("""
     ### Despre Simulatorul Anti-Phishing
     
@@ -631,7 +632,6 @@ with st.expander("Exemple recente"):
     
     © 2025 Simulatorul Anti-Phishing | Codul sursă disponibil sub licență GNU GPL-3.0
     """)
-
 # Footer
 st.markdown("---")
 st.markdown("© 2025 Anti-Phishing Simulator")
