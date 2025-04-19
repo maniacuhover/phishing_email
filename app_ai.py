@@ -279,14 +279,14 @@ if st.session_state.detailed_explanations:
         ✅ Folosește autentificarea în doi factori
         ✅ Accesează direct site-urile web, nu prin link-uri din email
         """)
-            st.session_state.answered_types[current['type']] = {
+        st.session_state.answered_types[current['type']] = {
                 'correct': correct,
                 'explanation': current['explanation']
-            }
-            # Prepare next
-            st.session_state.current_emails = None
-            st.session_state.just_verified = True
-
+        }
+        # Prepare next
+        st.session_state.current_emails = None
+        st.session_state.just_verified = True
+    
     # Next example button
     if st.session_state.just_verified and st.button("Următorul exemplu", use_container_width=True):
         st.session_state.current_emails = None
