@@ -8,12 +8,61 @@ import random
 st.set_page_config(page_title="Vaccin Anti-Phishing", page_icon="🛡️", layout="wide")
 
 # HTML renderer import
-#sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-#from html_email_renderer import render_html_email as format_email_html
-from phishing_analyzer import analyze_phishing_email
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# from html_email_renderer import render_html_email as format_email_html
+# from phishing_analyzer import analyze_phishing_email
 from text_highlighter import highlight_phishing_indicators
 # Load examples from JSON file
 @st.cache_data
+# Funcția de analiză phishing direct în app_ai.py
+def analyze_phishing_email(email_data, email_type):
+    """
+    Analizează un email de phishing și identifică indicatorii de fraudă
+    """
+    indicators = []
+    
+    # Analizarea subiectului
+    subject = email_data.get("subject", "").lower()
+    if any(word in subject for word in ["urgent", "urgentă", "imediat", "acum", "alertă", "atenție"]):
+        indicators.append({
+            "tip": "Ton de urgență în subiect",
+            "detalii": "Emailurile frauduloase folosesc adesea un ton de urgență pentru a te determina să acționezi impulsiv.",
+            "exemplu": email_data.get("subject"),
+            "risc": "ridicat"
+        })
+    
+    # Analizarea corpului
+    body = email_data.get("body", "").lower()
+    
+    # Verificarea URL-urilor suspecte
+    import re
+    urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', body)
+    
+    for url in urls:
+        suspicious = False
+        reasons = []
+        
+        # URL scurtat
+        if any(domain in url for domain in ["bit.ly", "tinyurl", "goo.gl", "t.co"]):
+            suspicious = True
+            reasons.append("URL scurtat care ascunde destinația reală")
+        
+        if suspicious:
+            indicators.append({
+                "tip": "URL suspect",
+                "detalii": "Link-ul poate fi fraudulos: " + ", ".join(reasons),
+                "exemplu": url,
+                "risc": "ridicat"
+            })
+    
+    # Verificarea solicitărilor de informații sensibile
+    sensitive_patterns = [
+        "parolă", "password", "user", "login", "autentificare", "cont", "card"
+    ]
+    
+    if any(pattern in body for pattern in sensitive_patterns):
+        indicators.append({
+            "tip": "Solicitare de inf
 def load_examples():
     try:
         with open("examples.json", "r", encoding="utf-8") as f:
