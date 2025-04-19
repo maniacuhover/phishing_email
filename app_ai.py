@@ -9,7 +9,8 @@ st.set_page_config(page_title="Vaccin Anti-Phishing", page_icon="🛡️", layou
 
 # HTML renderer import
 from html_email_renderer import render_html_email as format_email_html
-
+from phishing_analyzer import analyze_phishing_email
+from text_highlighter import highlight_phishing_indicators
 # Load examples from JSON file
 @st.cache_data
 def load_examples():
@@ -31,6 +32,9 @@ defaults = {
     "current_emails": None,
     "phish_positions": [],
     "just_verified": False
+    "detailed_explanations": True,  # Nou: activează explicații detaliate
+    "show_indicators": False,  # Nou: arată indicatorii de phishing
+    "current_analysis": None  # Nou: stochează analiza curentă
 }
 for key, value in defaults.items():
     if key not in st.session_state:
@@ -71,6 +75,8 @@ with st.sidebar:
     st.session_state.enhanced_ui = st.toggle(
         "Interfață îmbunătățită", value=st.session_state.enhanced_ui
     )
+    # Adaugă după linia cu toggleul "Interfață îmbunătățită"
+    st.session_state.detailed_explanations = st.toggle("Explicații detaliate", value=st.session_state.detailed_explanations)
 
     if st.button("Resetează tot"):
         for key in list(st.session_state.keys()):
@@ -141,6 +147,8 @@ else:
         pair = [(fake, True), (real, False)] if left else [(real, False), (fake, True)]
 
         st.session_state.current_emails = pair
+        phish_email = fake
+        st.session_state.current_analysis = analyze_phishing_email(phish_email, cur["type"])
         st.session_state.just_verified = False
 
     else:
@@ -176,6 +184,101 @@ else:
             corr = 'Mesaj #1' if pair[0][1] else 'Mesaj #2'
             st.info(f"Răspuns corect: {corr}")
             st.markdown(f"**Explicație:** {current['explanation']}")
+            # Nou: Afișare analiză detaliată dacă este activată
+if st.session_state.detailed_explanations:
+    st.session_state.show_indicators = True
+    st.subheader("Analiză detaliată a emailului de phishing")
+    
+    # Găsește emailul de phishing
+    phish_index = 0 if pair[0][1] else 1
+    phish_data = pair[phish_index][0]
+    
+    # Afișează indicatorii de phishing
+    analysis = st.session_state.current_analysis
+    
+    # Arată scorul de risc
+    risk_score = analysis["total_risk_score"]
+    risk_level = "Scăzut" if risk_score < 5 else "Mediu" if risk_score < 10 else "Ridicat"
+    risk_color = "#4CAF50" if risk_score < 5 else "#FF9800" if risk_score < 10 else "#F44336"
+    
+    st.markdown(f"""
+    <div style="border-radius: 5px; padding: 10px; background-color: {risk_color}; color: white; margin-bottom: 15px;">
+        <h3 style="margin: 0;">Nivel de risc: {risk_level}</h3>
+        <p style="margin: 5px 0 0 0;">Indicator principal: {analysis["primary_risk"]}</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Listează toți indicatorii identificați
+    st.markdown("### Indicatori de phishing identificați")
+    
+    # Creăm un tabel pentru indicatori
+    indicators_data = []
+    for ind in analysis["indicators"]:
+        if ind["risc"] != "informativ":
+            indicators_data.append({
+                "Indicator": ind["tip"],
+                "Detalii": ind["detalii"],
+                "Exemplu": ind["exemplu"],
+                "Nivel de risc": ind["risc"].capitalize()
+            })
+    
+    if indicators_data:
+        st.table(indicators_data)
+    else:
+        st.info("Nu au fost identificați indicatori specifici de phishing.")
+    
+    # Afișăm emailul cu indicatori evidențiați
+    st.markdown("### Email cu elemente suspecte evidențiate")
+    
+    # Pregătim conținutul evidențiat
+    if analysis["indicators"]:
+        highlighted_body = highlight_phishing_indicators(phish_data["body"], analysis["indicators"])
+        highlighted_subject = highlight_phishing_indicators(phish_data["subject"], analysis["indicators"])
+        
+        phish_data_highlighted = {
+            "subject": highlighted_subject,
+            "body": highlighted_body,
+            "sender": phish_data.get("sender", "Expeditor"),
+            "sender_email": phish_data.get("sender_email", "expeditor@domain.com"),
+            "logo": phish_data.get("logo", "LOGO"),
+            "colors": phish_data.get("colors", "#F44336"),  # Roșu pentru phishing
+            "footer": phish_data.get("footer", "© Email de phishing - Utilizat în scopuri educaționale"),
+            "date": phish_data.get("date", datetime.now().strftime("%d.%m.%Y"))
+        }
+        
+        components.html(format_email_html(phish_data_highlighted), height=400, scrolling=True)
+    
+    # Sfaturi specifice pentru acest tip de phishing
+    st.markdown("### Cum te protejezi împotriva acestui tip de phishing")
+    
+    tips_by_type = {
+        "Email-phishing clasic": [
+            "Verifică adresa exactă a expeditorului, nu doar numele afișat",
+            "Nu face click pe link-uri din emailuri nesolicitate",
+            "Trecerea mouse-ului peste link-uri îți permite să vezi URL-ul real",
+            "Verifică greșelile gramaticale și formulările neobișnuite"
+        ],
+        "Spear-phishing": [
+            "Verifică contextul și istoricul conversațiilor anterioare",
+            "Confirmă prin alt canal de comunicare solicitările neobișnuite",
+            "Fii atent la tonul și formulările diferite de cele obișnuite",
+            "Verifică adresa de email cu atenție, chiar dacă pare de la un cunoscut"
+        ]
+        # Vei adăuga restul tipurilor aici
+    }
+    
+    # Afișează sfaturile specifice tipului de phishing
+    if current["type"] in tips_by_type:
+        for tip in tips_by_type[current["type"]]:
+            st.markdown(f"✅ {tip}")
+    else:
+        # Sfaturi generale
+        st.markdown("""
+        ✅ Verifică atent adresa expeditorului și URL-urile
+        ✅ Nu furniza niciodată date sensibile prin email
+        ✅ Folosește autentificarea în doi factori
+        ✅ Accesează direct site-urile web, nu prin link-uri din email
+        """)
             st.session_state.answered_types[current['type']] = {
                 'correct': correct,
                 'explanation': current['explanation']
